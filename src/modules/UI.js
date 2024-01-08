@@ -1,21 +1,22 @@
-import { allNetFunctions } from "./Net";
+import { allNetFunctions } from './Net';
 
 const allEvents = {
-  init() {
-    let input = document.getElementById("loginBt");
-    input.onclick = function () {
-      console.log("loginbt");
-      console.log(input.value);
+    init() {
+        let input = document.getElementById('loginBt');
+        input.onclick = function () {
+            let nickname = document.getElementById('nicknameInput');
+            console.log(nickname);
+            console.log(nickname.value);
 
-      allNetFunctions.loginUser(input.value);
-    };
+            allNetFunctions.loginUser(nickname.value);
+        };
 
-    document.getElementById("resetBt").onclick = function () {
-      console.log("resetBt");
+        document.getElementById('resetBt').onclick = function () {
+            console.log('resetBt');
 
-      allNetFunctions.resetUsers();
-    };
-  },
+            allNetFunctions.resetUsers();
+        };
+    },
 };
 
 export { allEvents };

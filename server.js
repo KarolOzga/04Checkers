@@ -18,7 +18,10 @@ app.use((req, res, next) => {
     next();
 });
 
-
+app.post('/addUser', (req, res) => {
+    console.log(req.body);
+    res.json(req.body);
+});
 
 app.listen(PORT, function () {
     console.log('start serwera na porcie ' + PORT);

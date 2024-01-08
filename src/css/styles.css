@@ -27,7 +27,7 @@ body {
     background-color: rgba(57, 58, 60, 0.5);
 }
 
-#nicknameInput {
+#nicknameInputDiv {
     color: white;
     background-color: transparent;
     border: 1px solid white;
