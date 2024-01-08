@@ -1,8 +1,12 @@
-#root{
+body {
+    font-family: 'EB Garamond', serif;
+    font-family: 'Tektur', sans-serif;
+}
+#root {
     position: absolute;
 }
 
-#container{
+#container {
     position: absolute;
     width: 100vw;
     height: 100vh;
@@ -11,7 +15,7 @@
     align-items: center;
     justify-content: center;
 }
-#card{
+#card {
     width: 500px;
     height: 500px;
     display: flex;
@@ -21,16 +25,16 @@
     border-radius: 15px;
 
     background-color: rgba(57, 58, 60, 0.5);
-
 }
 
-#nicknameInput{
+#nicknameInput {
     color: white;
     background-color: transparent;
     border: 1px solid white;
     border-radius: 10px;
 }
-#loginBt, #resetBt{
+#loginBt,
+#resetBt {
     color: black;
     background-color: white;
     border-radius: 10px;
@@ -41,20 +45,23 @@
     text-align: center;
 }
 
-#title{
+#title {
     color: white;
     font-size: 30px;
 }
-input{
+input {
     background-color: rgba(57, 58, 60, 0.5);
     border-radius: 10px;
     width: 300px;
     height: 30px;
     color: white;
     font-size: 20px;
+    font-family: 'EB Garamond', serif;
+    font-family: 'Tektur', sans-serif;
 }
 
-#loginBt:hover, #resetBt:hover{
+#loginBt:hover,
+#resetBt:hover {
     background-color: gray;
     cursor: pointer;
 }
