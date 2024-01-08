@@ -1,0 +1,60 @@
+#root{
+    position: absolute;
+}
+
+#container{
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#card{
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border-radius: 15px;
+
+    background-color: rgba(57, 58, 60, 0.5);
+
+}
+
+#nicknameInput{
+    color: white;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 10px;
+}
+#loginBt, #resetBt{
+    color: black;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid white;
+    width: 300px;
+    height: 30px;
+    margin: 10px;
+    text-align: center;
+}
+
+#title{
+    color: white;
+    font-size: 30px;
+}
+input{
+    background-color: rgba(57, 58, 60, 0.5);
+    border-radius: 10px;
+    width: 300px;
+    height: 30px;
+    color: white;
+    font-size: 20px;
+}
+
+#loginBt:hover, #resetBt:hover{
+    background-color: gray;
+    cursor: pointer;
+}
