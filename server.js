@@ -18,11 +18,17 @@ app.use((req, res, next) => {
     next();
 });
 
-app.post('/addUser', (req, res) => {
-    console.log(req.body);
-    res.json(req.body);
-});
+let activeUsers = [];
 
+app.post('/addUser', (req, res) => {
+    if (activeUsers.length < 2) {
+        activeUsers.push(req.body);
+        console.log(req.body);
+        res.json(req.body);
+    } else {
+        res.status(403).json({ error: 'Oba miejsca zajęte, zresetuj grę by zwolnić miejsca' });
+    }
+});
 app.listen(PORT, function () {
     console.log('start serwera na porcie ' + PORT);
 });

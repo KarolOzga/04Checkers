@@ -14,7 +14,6 @@ const GameObject = {
 
     render() {
         renderer.render(scene, camera.threeCamera);
-        // ico.update()
 
         requestAnimationFrame(GameObject.render);
     },
@@ -30,6 +29,26 @@ const GameObject = {
     },
 };
 
-let board = [];
+const szachownica = [
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+];
+
+const pionki = [
+    [2, 0, 2, 0, 2, 0, 2, 0],
+    [0, 2, 0, 2, 0, 2, 0, 2],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+    [1, 0, 1, 0, 1, 0, 1, 0],
+    [0, 1, 0, 1, 0, 1, 0, 1],
+];
 
 export { GameObject };

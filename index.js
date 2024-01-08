@@ -9,3 +9,5 @@ window.addEventListener('DOMContentLoaded', () => {
     let dialog = document.getElementById('card');
     dialog.showModal();
 });
+
+const pionki = [];

@@ -9,13 +9,18 @@ const allNetFunctions = {
             },
             body: JSON.stringify({ userName: userName }),
         })
-            .then((response) => response.json())
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Oba miejsca zajęte, zresetuj grę by zwolnić miejsca.');
+                }
+                return response.json();
+            })
             .then((data) => {
                 GameObject.setPlayer(data);
-                // console.log(GameObject);
             })
             .catch((error) => console.log(error));
     },
+
     resetUsers() {
         fetch('/resetUsers', options)
             .then((response) => response.json())
