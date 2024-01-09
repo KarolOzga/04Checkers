@@ -27,8 +27,8 @@ const allNetFunctions = {
                     camera.setCameraPosition(-5, 5, 3);
                     camera.setLookAt(4, 0, 3);
                 } else if (data.user === 2) {
-                    camera.setCameraPosition(10, 5, 3.5);
-                    camera.setLookAt(5, 0, 3.5);
+                    camera.setCameraPosition(10, 5, 3);
+                    camera.setLookAt(4, 0, 3);
                 }
             })
             .catch((error) => console.log(error));

@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import Renderer from './Renderer.js';
 import Camera from './Camera.js';
 import { Scene } from 'three';
+import { isUserLogged } from './UI.js';
 
 import black_board_texture from '../img/textures/black_board_texture.png';
 import white_board_texture from '../img/textures/white_board_texture.png';
@@ -18,6 +19,14 @@ const GameObject = {
     player2: null,
 
     render() {
+        if (!isUserLogged) {
+            const time = Date.now() * 0.0001;
+            const radius = 10;
+            const boardCenterX = 3.5;
+            const boardCenterY = 0;
+            const boardCenterZ = 3.5;
+            camera.moveInCircle(time, radius, boardCenterX, boardCenterY, boardCenterZ);
+        }
         renderer.render(scene, camera.threeCamera);
 
         requestAnimationFrame(GameObject.render);

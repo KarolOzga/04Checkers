@@ -1,10 +1,12 @@
 import { allNetFunctions } from './Net';
+let isUserLogged = false;
 
 const allEvents = {
     init() {
         let input = document.getElementById('loginBt');
         let nickname = document.getElementById('nicknameInput');
         input.onclick = function () {
+            isUserLogged = true;
             console.log(nickname);
             console.log(nickname.value);
 
@@ -15,6 +17,7 @@ const allEvents = {
 
         document.getElementById('resetBt').onclick = function () {
             console.log('resetBt');
+            isUserLogged = false;
             nickname.disabled = false;
             nickname.value = '';
             allNetFunctions.resetUsers();
@@ -23,3 +26,4 @@ const allEvents = {
 };
 
 export { allEvents };
+export { isUserLogged };

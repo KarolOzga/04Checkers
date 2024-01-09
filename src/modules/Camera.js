@@ -28,4 +28,10 @@ export default class Camera {
     setLookAt(x, y, z) {
         this.threeCamera.lookAt(new THREE.Vector3(x, y, z));
     }
+    moveInCircle(time, radius, centerX, centerY, centerZ) {
+        const x = centerX + radius * Math.sin(time);
+        const z = centerZ + radius * Math.cos(time);
+        this.threeCamera.position.set(x, this.threeCamera.position.y, z);
+        this.threeCamera.lookAt(new THREE.Vector3(centerX, centerY, centerZ));
+    }
 }
