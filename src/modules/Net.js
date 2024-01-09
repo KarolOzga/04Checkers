@@ -22,10 +22,16 @@ const allNetFunctions = {
     },
 
     resetUsers() {
-        fetch('/resetUsers', options)
+        fetch('/resetUsers', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(),
+        })
             .then((response) => response.json())
             .then((data) => {
-                // działania po resecie
+                console.log(data.message);
             })
             .catch((error) => console.log(error));
     },

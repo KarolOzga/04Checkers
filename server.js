@@ -29,6 +29,12 @@ app.post('/addUser', (req, res) => {
         res.status(403).json({ error: 'Oba miejsca zajęte, zresetuj grę by zwolnić miejsca' });
     }
 });
+
+app.post('/resetUsers', (req, res) => {
+    activeUsers = [];
+    res.json({ message: 'Zresetowano graczy' });
+});
+
 app.listen(PORT, function () {
     console.log('start serwera na porcie ' + PORT);
 });

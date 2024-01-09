@@ -3,8 +3,8 @@ import { allNetFunctions } from './Net';
 const allEvents = {
     init() {
         let input = document.getElementById('loginBt');
+        let nickname = document.getElementById('nicknameInput');
         input.onclick = function () {
-            let nickname = document.getElementById('nicknameInput');
             console.log(nickname);
             console.log(nickname.value);
 
@@ -14,7 +14,8 @@ const allEvents = {
 
         document.getElementById('resetBt').onclick = function () {
             console.log('resetBt');
-
+            nickname.disabled = false;
+            nickname.value = '';
             allNetFunctions.resetUsers();
         };
     },
