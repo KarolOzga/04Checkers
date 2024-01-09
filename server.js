@@ -9,7 +9,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('dist'));
 
-app.use(express.static(path.join(__dirname, '/src/modules')));
+// app.use(express.static(path.join(__dirname, '/src/modules')));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');

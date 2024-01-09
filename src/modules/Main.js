@@ -3,6 +3,11 @@ import Renderer from './Renderer.js';
 import Camera from './Camera.js';
 import { Scene } from 'three';
 
+import black_board_texture from '../img/textures/black_board_texture.png';
+import white_board_texture from '../img/textures/white_board_texture.png';
+import pink_pawn_texture from '../img/textures/pink_pawn_texture.png';
+import white_pawn_texture from '../img/textures/white_pawn_texture.png';
+
 const container = document.getElementById('root');
 const scene = new Scene();
 const renderer = new Renderer(scene, container);
@@ -32,11 +37,11 @@ const light = new THREE.AmbientLight(0xffffff, 1);
 scene.add(light);
 
 const textureLoader = new THREE.TextureLoader();
-const black_texture = textureLoader.load('/src/img/textures/black_board_texture.png');
-const white_texture = textureLoader.load('/src/img/textures/white_board_texture.png');
+const black_texture = textureLoader.load(black_board_texture);
+const white_texture = textureLoader.load(white_board_texture);
 
-const pawnPinkTexture = textureLoader.load('/src/img/textures/pink_pawn_texture.png');
-const pawnWhiteTexture = textureLoader.load('/src/img/textures/white_pawn_texture.png');
+const pawnPinkTexture = textureLoader.load(pink_pawn_texture);
+const pawnWhiteTexture = textureLoader.load(white_pawn_texture);
 
 const geometry = new THREE.BoxGeometry(1, 0.5, 1);
 
