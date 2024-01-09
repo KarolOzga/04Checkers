@@ -24,7 +24,7 @@ app.post('/addUser', (req, res) => {
     if (activeUsers.length < 2) {
         activeUsers.push(req.body);
         console.log(req.body);
-        res.json(req.body);
+        res.json({ user: activeUsers.length, userName: req.body.userName });
     } else {
         res.status(403).json({ error: 'Oba miejsca zajęte, zresetuj grę by zwolnić miejsca' });
     }

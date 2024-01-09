@@ -9,6 +9,7 @@ const allEvents = {
             console.log(nickname.value);
 
             allNetFunctions.loginUser(nickname.value);
+
             nickname.disabled = true;
         };
 

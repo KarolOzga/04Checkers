@@ -10,6 +10,8 @@ export default class Camera {
         this.threeCamera.position.set(3.65, 5, 12);
         this.threeCamera.lookAt(new THREE.Vector3(3.65, 0, 0));
 
+        // this.threeCamera.position.set(10, 5, 3.5);
+        // this.threeCamera.lookAt(new THREE.Vector3(5, 0, 3.5));
         this.updateSize(renderer);
 
         window.addEventListener('resize', () => this.updateSize(renderer), false);
@@ -18,5 +20,12 @@ export default class Camera {
     updateSize(renderer) {
         this.threeCamera.aspect = renderer.domElement.width / renderer.domElement.height;
         this.threeCamera.updateProjectionMatrix();
+    }
+    setCameraPosition(x, y, z) {
+        this.threeCamera.position.set(x, y, z);
+        this.threeCamera.lookAt(new THREE.Vector3(x, 0, 0));
+    }
+    setLookAt(x, y, z) {
+        this.threeCamera.lookAt(new THREE.Vector3(x, y, z));
     }
 }
