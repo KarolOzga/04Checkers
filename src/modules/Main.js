@@ -28,6 +28,22 @@ const GameObject = {
         console.log(this.player1, this.player2);
     },
 };
+const light = new THREE.AmbientLight(0xffffff, 1);
+scene.add(light);
+
+const textureLoader = new THREE.TextureLoader();
+const black_texture = textureLoader.load('/src/img/textures/black_board_texture.png');
+const white_texture = textureLoader.load('/src/img/textures/white_board_texture.png');
+
+const geometry = new THREE.BoxGeometry(1, 0.5, 1);
+
+const black_material = new THREE.MeshBasicMaterial({ map: black_texture });
+const white_material = new THREE.MeshBasicMaterial({ map: white_texture });
+
+// const black_plate = new THREE.Mesh(geometry, black_material);
+// const white_plate = new THREE.Mesh(geometry, white_material);
+
+// scene.add(cube);
 
 const szachownica = [
     [1, 0, 1, 0, 1, 0, 1, 0],
@@ -40,6 +56,20 @@ const szachownica = [
     [0, 1, 0, 1, 0, 1, 0, 1],
 ];
 
+for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+        if (szachownica[i][j] === 1) {
+            const black_plate = new THREE.Mesh(geometry, black_material);
+            black_plate.position.set(i, 0, j);
+            scene.add(black_plate);
+        } else {
+            const white_plate = new THREE.Mesh(geometry, white_material);
+            white_plate.position.set(i, 0, j);
+            scene.add(white_plate);
+        }
+    }
+}
+
 const pionki = [
     [2, 0, 2, 0, 2, 0, 2, 0],
     [0, 2, 0, 2, 0, 2, 0, 2],
@@ -50,5 +80,7 @@ const pionki = [
     [1, 0, 1, 0, 1, 0, 1, 0],
     [0, 1, 0, 1, 0, 1, 0, 1],
 ];
+
+const CylinderGeometry = new THREE.CylinderGeometry(1, 1, 0.5, 32);
 
 export { GameObject };
