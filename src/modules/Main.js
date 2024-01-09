@@ -35,13 +35,15 @@ const textureLoader = new THREE.TextureLoader();
 const black_texture = textureLoader.load('/src/img/textures/black_board_texture.png');
 const white_texture = textureLoader.load('/src/img/textures/white_board_texture.png');
 
+const pawnPinkTexture = textureLoader.load('/src/img/textures/pink_pawn_texture.png');
+const pawnWhiteTexture = textureLoader.load('/src/img/textures/white_pawn_texture.png');
+
 const geometry = new THREE.BoxGeometry(1, 0.5, 1);
 
 const black_material = new THREE.MeshBasicMaterial({ map: black_texture });
 const white_material = new THREE.MeshBasicMaterial({ map: white_texture });
-
-// const black_plate = new THREE.Mesh(geometry, black_material);
-// const white_plate = new THREE.Mesh(geometry, white_material);
+const pawn_pink_material = new THREE.MeshBasicMaterial({ map: pawnPinkTexture });
+const pawn_white_material = new THREE.MeshBasicMaterial({ map: pawnWhiteTexture });
 
 // scene.add(cube);
 
@@ -73,14 +75,28 @@ for (let i = 0; i < 8; i++) {
 const pionki = [
     [2, 0, 2, 0, 2, 0, 2, 0],
     [0, 2, 0, 2, 0, 2, 0, 2],
-    [1, 0, 1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1],
-    [1, 0, 1, 0, 1, 0, 1, 0],
-    [0, 1, 0, 1, 0, 1, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0],
     [1, 0, 1, 0, 1, 0, 1, 0],
     [0, 1, 0, 1, 0, 1, 0, 1],
 ];
 
-const CylinderGeometry = new THREE.CylinderGeometry(1, 1, 0.5, 32);
+const CylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
+
+for (let i = 0; i < 8; i++) {
+    for (let j = 0; j < 8; j++) {
+        if (pionki[i][j] === 1) {
+            const pawn_pink = new THREE.Mesh(CylinderGeometry, pawn_pink_material);
+            pawn_pink.position.set(i, 0.25, j);
+            scene.add(pawn_pink);
+        } else if (pionki[i][j] === 2) {
+            const pawn_white = new THREE.Mesh(CylinderGeometry, pawn_white_material);
+            pawn_white.position.set(i, 0.25, j);
+            scene.add(pawn_white);
+        }
+    }
+}
 
 export { GameObject };
