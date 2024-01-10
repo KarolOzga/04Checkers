@@ -9,6 +9,9 @@ import white_board_texture from '../img/textures/white_board_texture.png';
 import pink_pawn_texture from '../img/textures/pink_pawn_texture.png';
 import white_pawn_texture from '../img/textures/white_pawn_texture.png';
 
+import { isUserOneLogged } from './Net.js';
+import { isUserTwoLogged } from './Net.js';
+
 const container = document.getElementById('root');
 const scene = new Scene();
 const renderer = new Renderer(scene, container);
@@ -99,19 +102,24 @@ const pionki = [
 
 const CylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
 
-for (let i = 0; i < 8; i++) {
-    for (let j = 0; j < 8; j++) {
-        if (pionki[i][j] === 1) {
-            const pawn_pink = new THREE.Mesh(CylinderGeometry, pawn_pink_material);
-            pawn_pink.position.set(i, 0.25, j);
-            scene.add(pawn_pink);
-        } else if (pionki[i][j] === 2) {
-            const pawn_white = new THREE.Mesh(CylinderGeometry, pawn_white_material);
-            pawn_white.position.set(i, 0.25, j);
-            scene.add(pawn_white);
+function GeneratePawns() {
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if (isUserOneLogged && pionki[i][j] === 2) {
+                //nwm czy to ma sens - to powinno byc generowane na serwerze w takim wypadku - albo jakos komunikacja z serwerem kiedy które generowac
+                const pawn_pink = new THREE.Mesh(CylinderGeometry, pawn_pink_material);
+                pawn_pink.position.set(i, 0.25, j);
+                scene.add(pawn_pink);
+            }
+            if (isUserTwoLogged && pionki[i][j] === 1) {
+                const pawn_white = new THREE.Mesh(CylinderGeometry, pawn_white_material);
+                pawn_white.position.set(i, 0.25, j);
+                scene.add(pawn_white);
+            }
         }
     }
 }
 
+export { GeneratePawns };
 export { GameObject };
 export { camera };

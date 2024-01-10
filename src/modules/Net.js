@@ -1,5 +1,9 @@
 import { GameObject } from './Main.js';
 import { camera } from './Main.js';
+import { GeneratePawns } from './Main.js';
+
+let isUserOneLogged = false;
+let isUserTwoLogged = false;
 
 const allNetFunctions = {
     loginUser(userName) {
@@ -24,10 +28,16 @@ const allNetFunctions = {
                 GameObject.setPlayer(data);
                 console.log(data);
                 if (data.user === 1) {
+                    isUserOneLogged = true;
+                    GeneratePawns();
+
                     camera.setCameraPosition(-5, 5, 3);
                     camera.setLookAt(4, 0, 3);
                 } else if (data.user === 2) {
-                    camera.setCameraPosition(10, 5, 3);
+                    isUserTwoLogged = true;
+                    GeneratePawns();
+
+                    camera.setCameraPosition(12, 5, 3);
                     camera.setLookAt(4, 0, 3);
                 }
             })
@@ -52,4 +62,5 @@ const allNetFunctions = {
     },
 };
 
+export { isUserOneLogged, isUserTwoLogged };
 export { allNetFunctions };

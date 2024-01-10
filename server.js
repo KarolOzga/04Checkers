@@ -22,6 +22,13 @@ let activeUsers = [];
 
 app.post('/addUser', (req, res) => {
     if (activeUsers.length < 2) {
+        if (activeUsers.length === 1 && activeUsers[0].userName === req.body.userName) {
+            res.status(403).json({ error: 'Nie możesz grać sam ze sobą' });
+            return;
+        }
+        // else if(activeUsers.length === 1 && activeUsers[0].userName !== req.body.userName){
+
+        // }
         activeUsers.push(req.body);
         console.log(req.body);
         res.json({ user: activeUsers.length, userName: req.body.userName });
