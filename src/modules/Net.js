@@ -1,11 +1,12 @@
 import { GameObject } from './Main.js';
 import { camera } from './Main.js';
 import { GeneratePawns } from './Main.js';
-
-let isUserOneLogged = false;
-let isUserTwoLogged = false;
+import { allEvents } from './UI.js';
 
 const allNetFunctions = {
+    isUserOneLogged: false,
+    isUserTwoLogged: false,
+
     loginUser(userName) {
         fetch('http://localhost:3000/addUser', {
             method: 'POST',
@@ -16,11 +17,10 @@ const allNetFunctions = {
         })
             .then((response) => {
                 if (!response.ok) {
+                    allEvents.reject();
                     throw new Error('Oba miejsca zajęte, zresetuj grę by zwolnić miejsca.');
                 } else {
-                    let dialog = document.getElementById('card');
-                    dialog.close();
-                    dialog.style.display = 'none';
+                    allEvents.closeDialog();
                 }
                 return response.json();
             })
@@ -28,15 +28,16 @@ const allNetFunctions = {
                 GameObject.setPlayer(data);
                 console.log(data);
                 if (data.user === 1) {
-                    isUserOneLogged = true;
+                    allNetFunctions.isUserOneLogged = true;
+                    allEvents.hello();
                     GeneratePawns();
 
                     camera.setCameraPosition(-5, 5, 3);
                     camera.setLookAt(4, 0, 3);
                 } else if (data.user === 2) {
-                    isUserTwoLogged = true;
+                    allNetFunctions.isUserTwoLogged = true;
                     GeneratePawns();
-
+                    allEvents.hello();
                     camera.setCameraPosition(12, 5, 3);
                     camera.setLookAt(4, 0, 3);
                 }
@@ -54,13 +55,20 @@ const allNetFunctions = {
         })
             .then((response) => response.json())
             .then((data) => {
+                let resetBt = document.getElementById('resetBt');
+                resetBt.classList.remove('pulse-button');
+                let userInfo = document.getElementById('hello');
+                userInfo.innerHTML = 'Pomyślnie zresetowano graczy !!!';
+                setTimeout(() => {
+                    userInfo.innerHTML = '';
+                }, 2000);
+
+                allEvents.isUserLogged = false;
                 camera.setCameraPosition(3.65, 5, 12);
-                // camera.setLookAt(3.65, 0, 0);
                 console.log(data.message);
             })
             .catch((error) => console.log(error));
     },
 };
 
-export { isUserOneLogged, isUserTwoLogged };
 export { allNetFunctions };
