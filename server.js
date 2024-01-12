@@ -28,14 +28,8 @@ app.post('/addUser', (req, res) => {
                 return;
             }
             activeUsers.push(req.body);
-            console.log('User added:', req.body.userName);
-            console.log(
-                'Current users:',
-                activeUsers.map((user) => user.userName)
-            );
             res.json({ user: activeUsers.length, userName: req.body.userName });
         } else if (activeUsers.length === 2) {
-            console.log('Both spots taken, cannot add user:', req.body.userName);
             res.status(403).json({ error: 'Oba miejsca zajęte, zresetuj grę by zwolnić miejsca' });
         }
     }, 100);
