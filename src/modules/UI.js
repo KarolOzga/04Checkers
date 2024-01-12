@@ -36,6 +36,12 @@ const allEvents = {
         let resetBt = document.getElementById('resetBt');
         resetBt.classList.add('pulse-button');
     },
+    sameUser() {
+        let userInfo = document.getElementById('hello');
+        userInfo.innerHTML = 'Nie możesz grać sam ze sobą';
+        let input = document.getElementById('nicknameInput');
+        input.disabled = false;
+    },
     closeDialog() {
         let dialog = document.getElementById('card');
         dialog.close();

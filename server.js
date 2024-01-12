@@ -21,22 +21,25 @@ app.use((req, res, next) => {
 let activeUsers = [];
 
 app.post('/addUser', (req, res) => {
-    if (activeUsers.length < 2) {
-        if (activeUsers.length === 1 && activeUsers[0].userName === req.body.userName) {
-            res.status(403).json({ error: 'Nie możesz grać sam ze sobą' });
-            return;
+    setTimeout(() => {
+        if (activeUsers.length < 2) {
+            if (activeUsers.length === 1 && activeUsers[0].userName === req.body.userName) {
+                res.status(409).json({ error: 'Nie możesz grać sam ze sobą' });
+                return;
+            }
+            activeUsers.push(req.body);
+            console.log('User added:', req.body.userName);
+            console.log(
+                'Current users:',
+                activeUsers.map((user) => user.userName)
+            );
+            res.json({ user: activeUsers.length, userName: req.body.userName });
+        } else if (activeUsers.length === 2) {
+            console.log('Both spots taken, cannot add user:', req.body.userName);
+            res.status(403).json({ error: 'Oba miejsca zajęte, zresetuj grę by zwolnić miejsca' });
         }
-        // else if(activeUsers.length === 1 && activeUsers[0].userName !== req.body.userName){
-
-        // }
-        activeUsers.push(req.body);
-        console.log(req.body);
-        res.json({ user: activeUsers.length, userName: req.body.userName });
-    } else {
-        res.status(403).json({ error: 'Oba miejsca zajęte, zresetuj grę by zwolnić miejsca' });
-    }
+    }, 100);
 });
-
 app.post('/resetUsers', (req, res) => {
     activeUsers = [];
     res.json({ message: 'Zresetowano graczy' });

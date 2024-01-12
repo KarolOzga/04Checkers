@@ -16,10 +16,14 @@ const allNetFunctions = {
             body: JSON.stringify({ userName: userName }),
         })
             .then((response) => {
-                if (!response.ok) {
+                console.log(response.status);
+                if (response.status === 403) {
                     allEvents.reject();
                     throw new Error('Oba miejsca zajęte, zresetuj grę by zwolnić miejsca.');
-                } else {
+                } else if (response.status === 409) {
+                    allEvents.sameUser();
+                    throw new Error('Nie możesz grać sam ze sobą');
+                } else if (response.ok) {
                     allEvents.closeDialog();
                 }
                 return response.json();
