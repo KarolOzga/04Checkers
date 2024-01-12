@@ -102,15 +102,16 @@ const pionki = [
 const CylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
 
 function GeneratePawns() {
+    scene.children = scene.children.filter((child) => child.type !== 'Mesh' || (child.material !== pawn_pink_material && child.material !== pawn_white_material));
+
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
-                //nwm czy to ma sens - to powinno byc generowane na serwerze w takim wypadku - albo jakos komunikacja z serwerem kiedy które generowac
+            if (pionki[i][j] === 2) {
                 const pawn_pink = new THREE.Mesh(CylinderGeometry, pawn_pink_material);
                 pawn_pink.position.set(i, 0.25, j);
                 scene.add(pawn_pink);
             }
-            if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
+            if (pionki[i][j] === 1) {
                 const pawn_white = new THREE.Mesh(CylinderGeometry, pawn_white_material);
                 pawn_white.position.set(i, 0.25, j);
                 scene.add(pawn_white);
@@ -118,7 +119,6 @@ function GeneratePawns() {
         }
     }
 }
-
 export { GeneratePawns };
 export { GameObject };
 export { camera };
