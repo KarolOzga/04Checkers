@@ -11,6 +11,8 @@ import white_pawn_texture from '../img/textures/white_pawn_texture.png';
 import { allNetFunctions } from './Net.js';
 import { allEvents } from './UI.js';
 
+import Pawn from './Pawn.js';
+
 const container = document.getElementById('root');
 const scene = new Scene();
 const renderer = new Renderer(scene, container);
@@ -99,30 +101,24 @@ const pionki = [
     [0, 1, 0, 1, 0, 1, 0, 1],
 ];
 
-const CylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
-
 function GeneratePawns() {
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
-                const pawn_pink = new THREE.Mesh(CylinderGeometry, pawn_pink_material);
-                pawn_pink.position.set(i, 0.25, j);
+                const pawn_pink = new Pawn(pawn_pink_material, i, j);
                 scene.add(pawn_pink);
             }
             if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
-                const pawn_white = new THREE.Mesh(CylinderGeometry, pawn_white_material);
-                pawn_white.position.set(i, 0.25, j);
+                const pawn_white = new Pawn(pawn_white_material, i, j);
                 scene.add(pawn_white);
             }
             if (allNetFunctions.isUserOneLogged && allNetFunctions.isUserTwoLogged) {
                 if (pionki[i][j] === 1) {
-                    const pawn_white = new THREE.Mesh(CylinderGeometry, pawn_white_material);
-                    pawn_white.position.set(i, 0.25, j);
+                    const pawn_white = new Pawn(pawn_white_material, i, j);
                     scene.add(pawn_white);
                 }
                 if (pionki[i][j] === 2) {
-                    const pawn_pink = new THREE.Mesh(CylinderGeometry, pawn_pink_material);
-                    pawn_pink.position.set(i, 0.25, j);
+                    const pawn_pink = new Pawn(pawn_pink_material, i, j);
                     scene.add(pawn_pink);
                 }
             }
