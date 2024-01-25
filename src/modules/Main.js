@@ -102,23 +102,34 @@ const pionki = [
 const CylinderGeometry = new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32);
 
 function GeneratePawns() {
-    scene.children = scene.children.filter((child) => child.type !== 'Mesh' || (child.material !== pawn_pink_material && child.material !== pawn_white_material));
-
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
-            if (pionki[i][j] === 2) {
+            if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
                 const pawn_pink = new THREE.Mesh(CylinderGeometry, pawn_pink_material);
                 pawn_pink.position.set(i, 0.25, j);
                 scene.add(pawn_pink);
             }
-            if (pionki[i][j] === 1) {
+            if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
                 const pawn_white = new THREE.Mesh(CylinderGeometry, pawn_white_material);
                 pawn_white.position.set(i, 0.25, j);
                 scene.add(pawn_white);
             }
+            if (allNetFunctions.isUserOneLogged && allNetFunctions.isUserTwoLogged) {
+                if (pionki[i][j] === 1) {
+                    const pawn_white = new THREE.Mesh(CylinderGeometry, pawn_white_material);
+                    pawn_white.position.set(i, 0.25, j);
+                    scene.add(pawn_white);
+                }
+                if (pionki[i][j] === 2) {
+                    const pawn_pink = new THREE.Mesh(CylinderGeometry, pawn_pink_material);
+                    pawn_pink.position.set(i, 0.25, j);
+                    scene.add(pawn_pink);
+                }
+            }
         }
     }
 }
+
 export { GeneratePawns };
 export { GameObject };
 export { camera };

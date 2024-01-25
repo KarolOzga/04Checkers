@@ -39,6 +39,10 @@ app.post('/resetUsers', (req, res) => {
     res.json({ message: 'Zresetowano graczy' });
 });
 
-app.listen(PORT, function () {
+app.post('/whichPlayer', (req, res) => {
+    res.json({ player: activeUsers.length });
+});
+
+app.listen(PORT, '0.0.0.0', function () {
     console.log('start serwera na porcie ' + PORT);
 });

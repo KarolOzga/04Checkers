@@ -8,7 +8,7 @@ const allNetFunctions = {
     isUserTwoLogged: false,
 
     loginUser(userName) {
-        fetch('http://localhost:3000/addUser', {
+        fetch('http://192.168.0.171:3000/addUser', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -29,6 +29,7 @@ const allNetFunctions = {
                 return response.json();
             })
             .then((data) => {
+                this.whichPlayer();
                 GameObject.setPlayer(data);
                 console.log(data);
                 if (data.user === 1) {
@@ -49,8 +50,34 @@ const allNetFunctions = {
             .catch((error) => console.log(error));
     },
 
+    whichPlayer() {
+        let interval = setInterval(() => {
+            fetch('http://192.168.0.171:3000/whichPlayer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userName: userName }),
+            })
+                .then((response) => response.json())
+                .then((data) => {
+                    if (data.player === 1) {
+                        this.isUserOneLogged = true;
+                        this.isUserTwoLogged = false;
+                        GeneratePawns();
+                    } else if (data.player === 2) {
+                        this.isUserOneLogged = true;
+                        this.isUserTwoLogged = true;
+                        GeneratePawns();
+                        clearInterval(interval);
+                    }
+                    console.log(data.player);
+                });
+        }, 1000);
+    },
+
     resetUsers() {
-        fetch('http://localhost:3000/resetUsers', {
+        fetch('http://192.168.0.171:3000/resetUsers', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
