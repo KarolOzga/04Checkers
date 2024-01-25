@@ -8,6 +8,7 @@ const allNetFunctions = {
     isUserTwoLogged: false,
 
     loginUser(userName) {
+        let userNameAsParametr = userName;
         fetch('http://192.168.0.171:3000/addUser', {
             method: 'POST',
             headers: {
@@ -29,19 +30,21 @@ const allNetFunctions = {
                 return response.json();
             })
             .then((data) => {
-                this.whichPlayer();
+                this.whichPlayer(userNameAsParametr);
                 GameObject.setPlayer(data);
                 console.log(data);
                 if (data.user === 1) {
                     allNetFunctions.isUserOneLogged = true;
                     allEvents.hello();
                     GeneratePawns();
-
+                    allEvents.loading();
                     camera.setCameraPosition(-5, 5, 3);
                     camera.setLookAt(4, 0, 3);
                 } else if (data.user === 2) {
                     allNetFunctions.isUserTwoLogged = true;
                     GeneratePawns();
+                    allEvents.loading();
+                    allEvents.cancelLoading();
                     allEvents.hello();
                     camera.setCameraPosition(12, 5, 3);
                     camera.setLookAt(4, 0, 3);
@@ -50,7 +53,7 @@ const allNetFunctions = {
             .catch((error) => console.log(error));
     },
 
-    whichPlayer() {
+    whichPlayer(userName) {
         let interval = setInterval(() => {
             fetch('http://192.168.0.171:3000/whichPlayer', {
                 method: 'POST',
@@ -66,10 +69,15 @@ const allNetFunctions = {
                         this.isUserTwoLogged = false;
                         GeneratePawns();
                     } else if (data.player === 2) {
+                        allEvents.loading();
+                        allEvents.cancelLoading();
                         this.isUserOneLogged = true;
                         this.isUserTwoLogged = true;
                         GeneratePawns();
                         clearInterval(interval);
+                    }
+                    if (this.isUserOneLogged && this.isUserTwoLogged) {
+                        allEvents.cancelLoading();
                     }
                     console.log(data.player);
                 });

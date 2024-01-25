@@ -48,6 +48,27 @@ const allEvents = {
         dialog.style.display = 'none';
         allEvents.isUserLogged = true;
     },
+    loading() {
+        let loadingPlane = document.createElement('div');
+        loadingPlane.classList.add('loadingPlane');
+        document.body.appendChild(loadingPlane);
+
+        let loading = document.createElement('div');
+        loading.classList.add('loading');
+        loadingPlane.appendChild(loading);
+
+        loading.innerText = 'Waiting for second player...';
+
+        let loadingGif = document.createElement('div');
+        loadingGif.classList.add('loadingGif');
+
+        loading.appendChild(loadingGif);
+    },
+    cancelLoading() {
+        let loadingPlane = document.querySelector('.loadingPlane');
+        if (loadingPlane == null) return;
+        loadingPlane.remove();
+    },
 };
 
 export { allEvents };

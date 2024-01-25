@@ -106,3 +106,33 @@ input {
 .pulse-button {
     animation: pulse 2s infinite;
 }
+
+.loadingPlane {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+.loading {
+    color: whitesmoke;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(28, 39, 58, 0.8);
+    flex-direction: column;
+    border-radius: 15px;
+    border: 1px solid gray;
+    text-align: center;
+}
+.loadingGif {
+    width: 100px;
+    height: 100px;
+    background-image: url('../img/gifs/loading.gif');
+    background-size: cover;
+    background-position: -15px;
+}
