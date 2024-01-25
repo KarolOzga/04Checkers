@@ -64,6 +64,7 @@ const allNetFunctions = {
             })
                 .then((response) => response.json())
                 .then((data) => {
+                    console.log(data.users);
                     if (data.player === 1) {
                         this.isUserOneLogged = true;
                         this.isUserTwoLogged = false;
@@ -71,6 +72,8 @@ const allNetFunctions = {
                     } else if (data.player === 2) {
                         allEvents.loading();
                         allEvents.cancelLoading();
+                        // Display the opponent's username
+                        allEvents.helloSecondUser(data.users.find((user) => user.userName !== userName).userName);
                         this.isUserOneLogged = true;
                         this.isUserTwoLogged = true;
                         GeneratePawns();

@@ -40,7 +40,7 @@ app.post('/resetUsers', (req, res) => {
 });
 
 app.post('/whichPlayer', (req, res) => {
-    res.json({ player: activeUsers.length });
+    res.json({ player: activeUsers.length, userName: req.body.userName, users: activeUsers });
 });
 
 app.listen(PORT, '0.0.0.0', function () {

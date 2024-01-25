@@ -27,9 +27,15 @@ const allEvents = {
     hello() {
         if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
             let userInfo = document.getElementById('hello');
-            userInfo.innerHTML = 'Witaj ' + "<span id='userName'>" + userName + '</span>' + ', grasz ' + (allNetFunctions.isUserOneLogged == '1' ? 'białymi' : 'czarnymi');
+            userInfo.innerHTML = 'Witaj ' + "<span class='userName'>" + userName + '</span>' + ', grasz ' + (allNetFunctions.isUserOneLogged == '1' ? 'białymi' : 'czarnymi');
         }
     },
+
+    helloSecondUser(secondUserName) {
+        let userInfo = document.getElementById('hello');
+        userInfo.innerHTML += '<br />Grasz przeciwko: <span class="userName">' + secondUserName;
+    },
+
     reject() {
         let userInfo = document.getElementById('hello');
         userInfo.innerHTML = 'Wszystkie miejsca zajęte, poczekaj aż skończy się gra, lub ją zresetuj';

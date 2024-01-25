@@ -79,7 +79,7 @@ input {
     margin-left: -10px;
 }
 
-#userName {
+.userName {
     width: 10vw;
     color: white;
     font-size: 20px;
