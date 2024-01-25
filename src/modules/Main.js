@@ -12,6 +12,7 @@ import { allNetFunctions } from './Net.js';
 import { allEvents } from './UI.js';
 
 import Pawn from './Pawn.js';
+import Field from './Field.js';
 
 const container = document.getElementById('root');
 const scene = new Scene();
@@ -79,17 +80,16 @@ const szachownica = [
 for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
         if (szachownica[i][j] === 1) {
-            const black_plate = new THREE.Mesh(geometry, black_material);
-            black_plate.position.set(i, 0, j);
+            const black_plate = new Field(i, 0, j);
+            black_plate.material = black_material;
             scene.add(black_plate);
         } else {
-            const white_plate = new THREE.Mesh(geometry, white_material);
-            white_plate.position.set(i, 0, j);
+            const white_plate = new Field(i, 0, j);
+            white_plate.material = white_material;
             scene.add(white_plate);
         }
     }
 }
-
 const pionki = [
     [2, 0, 2, 0, 2, 0, 2, 0],
     [0, 2, 0, 2, 0, 2, 0, 2],
