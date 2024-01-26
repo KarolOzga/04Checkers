@@ -83,11 +83,11 @@ const szachownica = [
 for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
         if (szachownica[i][j] === 1) {
-            const black_plate = new Field(i, 0, j);
+            const black_plate = new Field(i, 0, j, true);
             black_plate.material = black_material;
             scene.add(black_plate);
         } else {
-            const white_plate = new Field(i, 0, j);
+            const white_plate = new Field(i, 0, j, false);
             white_plate.material = white_material;
             scene.add(white_plate);
         }
@@ -184,7 +184,7 @@ function performRaycast() {
     const intersects = raycaster.intersectObjects(scene.children);
     if (intersects.length > 0) {
         const intersectedObject = intersects[0].object;
-        if (intersectedObject.isPawn && !selectedPawn) {
+        if (intersectedObject.isPawn && intersectedObject.owner === currentUser && !selectedPawn) {
             // Select a pawn
             if (selectedPawn) {
                 selectedPawn.material = selectedPawn.originalMaterial; // Reset the material of the previously selected pawn
@@ -193,7 +193,7 @@ function performRaycast() {
             intersectedObject.originalMaterial = intersectedObject.material; // Store the original material
             intersectedObject.material = selectedMaterial; // Apply the new material
             selectedPawn = intersectedObject; // Store the selected pawn
-        } else if (intersectedObject.isField && selectedPawn) {
+        } else if (intersectedObject.isField && intersectedObject.isBlack && selectedPawn) {
             // Move the selected pawn to the selected field
             selectedPawn.position.set(intersectedObject.position.x, 0.25, intersectedObject.position.z);
             selectedPawn.material = selectedPawn.originalMaterial; // Reset the material of the selected pawn
