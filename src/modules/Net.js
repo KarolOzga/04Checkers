@@ -3,7 +3,6 @@ import { camera } from './Main.js';
 import { GeneratePawns } from './Main.js';
 import { allEvents } from './UI.js';
 import { setCorrectUserPawnColor } from './Main.js';
-import { removeGrayPawns } from './Main.js';
 
 const allNetFunctions = {
     isUserOneLogged: false,
@@ -48,7 +47,7 @@ const allNetFunctions = {
                 } else if (data.user === 2) {
                     allNetFunctions.isUserTwoLogged = true;
                     setCorrectUserPawnColor();
-
+                    GeneratePawns('gray');
                     allEvents.loading();
                     allEvents.cancelLoading();
                     allEvents.hello();
@@ -74,7 +73,8 @@ const allNetFunctions = {
                     if (data.player === 1) {
                         this.isUserOneLogged = true;
                         this.isUserTwoLogged = false;
-                        GeneratePawns();
+
+                        // GeneratePawns('pink');
                     } else if (data.player === 2) {
                         allEvents.loading();
                         allEvents.cancelLoading();
@@ -82,9 +82,17 @@ const allNetFunctions = {
                         allEvents.helloSecondUser(data.users.find((user) => user.userName !== userName).userName);
                         this.isUserOneLogged = true;
                         this.isUserTwoLogged = true;
-                        GeneratePawns();
+
+                        // GeneratePawns('pink');
                         clearInterval(interval);
                     }
+
+                    if (this.loginData.user === 1) {
+                        GeneratePawns('gray');
+                    } else {
+                        GeneratePawns('pink');
+                    }
+
                     if (this.isUserOneLogged && this.isUserTwoLogged) {
                         allEvents.cancelLoading();
                     }

@@ -104,26 +104,46 @@ const pionki = [
     [0, 1, 0, 1, 0, 1, 0, 1],
 ];
 
-function GeneratePawns() {
-    for (let i = 0; i < 8; i++) {
-        for (let j = 0; j < 8; j++) {
-            if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
-                const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink');
-                scene.add(pawn_pink);
-            }
-            if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
-                const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
-                scene.add(pawn_white);
+function GeneratePawns(color) {
+    let generatePinkIndex = 0;
+    let generateGrayIndex = 0;
+    if (color === undefined) {
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
+                if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
+                    const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink');
+                    scene.add(pawn_pink);
+                }
+                if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
+                    const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
+                    scene.add(pawn_white);
+                }
             }
         }
-    }
-}
+    } else {
+        if (color === 'pink' && generatePinkIndex === 0) {
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
+                        const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink');
+                        scene.add(pawn_pink);
+                    }
+                }
+            }
 
-function removeGrayPawns() {
-    for (let i = scene.children.length - 1; i >= 0; i--) {
-        const object = scene.children[i];
-        if (object instanceof Pawn && object.owner === 'gray') {
-            scene.remove(object);
+            generatePinkIndex = 1;
+        }
+        if (color === 'gray' && generateGrayIndex === 0) {
+            for (let i = 0; i < 8; i++) {
+                for (let j = 0; j < 8; j++) {
+                    if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
+                        const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
+                        scene.add(pawn_white);
+                    }
+                }
+            }
+
+            generateGrayIndex = 1;
         }
     }
 }
@@ -182,7 +202,6 @@ function performRaycast() {
     }
 }
 
-export { removeGrayPawns };
 export { setCorrectUserPawnColor };
 export { GeneratePawns };
 export { GameObject };
