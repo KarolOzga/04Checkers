@@ -14,6 +14,9 @@ import { allEvents } from './UI.js';
 import Pawn from './Pawn.js';
 import Field from './Field.js';
 
+import { Raycaster, Vector2 } from 'three';
+import { MeshPhongMaterial } from 'three';
+
 const container = document.getElementById('root');
 const scene = new Scene();
 const renderer = new Renderer(scene, container);
@@ -105,20 +108,20 @@ function GeneratePawns() {
     for (let i = 0; i < 8; i++) {
         for (let j = 0; j < 8; j++) {
             if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
-                const pawn_pink = new Pawn(pawn_pink_material, i, j);
+                const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink');
                 scene.add(pawn_pink);
             }
             if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
-                const pawn_white = new Pawn(pawn_white_material, i, j);
+                const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
                 scene.add(pawn_white);
             }
             if (allNetFunctions.isUserOneLogged && allNetFunctions.isUserTwoLogged) {
                 if (pionki[i][j] === 1) {
-                    const pawn_white = new Pawn(pawn_white_material, i, j);
+                    const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
                     scene.add(pawn_white);
                 }
                 if (pionki[i][j] === 2) {
-                    const pawn_pink = new Pawn(pawn_pink_material, i, j);
+                    const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink');
                     scene.add(pawn_pink);
                 }
             }
@@ -126,6 +129,54 @@ function GeneratePawns() {
     }
 }
 
+const raycaster = new Raycaster();
+const mouse = new Vector2();
+
+window.addEventListener(
+    'click',
+    (event) => {
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
+            performRaycast();
+        }
+    },
+    false
+);
+
+let selectedPawn = null;
+
+let currentUser;
+
+function setCorrectUserPawnColor() {
+    console.log('{ULTRA DEBUG}', allNetFunctions.isUserOneLogged, allNetFunctions.isUserTwoLogged);
+    if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
+        currentUser = allEvents.selectUser();
+        console.log('{ULTRA DEBUG}', currentUser);
+        performRaycast();
+    } else {
+        currentUser = null;
+    }
+}
+
+function performRaycast() {
+    raycaster.setFromCamera(mouse, camera.threeCamera);
+    const intersects = raycaster.intersectObjects(scene.children);
+    if (intersects.length > 0) {
+        const intersectedObject = intersects[0].object;
+        if (intersectedObject.isPawn && intersectedObject.owner === currentUser) {
+            if (selectedPawn) {
+                selectedPawn.material = selectedPawn.originalMaterial;
+            }
+            const selectedMaterial = new MeshPhongMaterial({ color: 0xff0000 });
+            intersectedObject.originalMaterial = intersectedObject.material;
+            intersectedObject.material = selectedMaterial;
+            selectedPawn = intersectedObject;
+        }
+    }
+}
+
+export { setCorrectUserPawnColor };
 export { GeneratePawns };
 export { GameObject };
 export { camera };

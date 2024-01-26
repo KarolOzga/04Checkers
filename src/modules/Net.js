@@ -2,10 +2,12 @@ import { GameObject } from './Main.js';
 import { camera } from './Main.js';
 import { GeneratePawns } from './Main.js';
 import { allEvents } from './UI.js';
+import { setCorrectUserPawnColor } from './Main.js';
 
 const allNetFunctions = {
     isUserOneLogged: false,
     isUserTwoLogged: false,
+    loginData: null,
 
     loginUser(userName) {
         let userNameAsParametr = userName;
@@ -30,11 +32,13 @@ const allNetFunctions = {
                 return response.json();
             })
             .then((data) => {
+                this.loginData = data;
                 this.whichPlayer(userNameAsParametr);
                 GameObject.setPlayer(data);
                 console.log(data);
                 if (data.user === 1) {
                     allNetFunctions.isUserOneLogged = true;
+                    setCorrectUserPawnColor();
                     allEvents.hello();
                     GeneratePawns();
                     allEvents.loading();
@@ -42,6 +46,7 @@ const allNetFunctions = {
                     camera.setLookAt(4, 0, 3);
                 } else if (data.user === 2) {
                     allNetFunctions.isUserTwoLogged = true;
+                    setCorrectUserPawnColor();
                     GeneratePawns();
                     allEvents.loading();
                     allEvents.cancelLoading();

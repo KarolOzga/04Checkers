@@ -75,6 +75,10 @@ const allEvents = {
         if (loadingPlane == null) return;
         loadingPlane.remove();
     },
+    selectUser() {
+        let user = allNetFunctions.loginData.user;
+        return user === 1 ? 'pink' : 'gray';
+    },
 };
 
 export { allEvents };
