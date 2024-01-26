@@ -3,6 +3,7 @@ import { camera } from './Main.js';
 import { GeneratePawns } from './Main.js';
 import { allEvents } from './UI.js';
 import { setCorrectUserPawnColor } from './Main.js';
+import { removeGrayPawns } from './Main.js';
 
 const allNetFunctions = {
     isUserOneLogged: false,
@@ -47,7 +48,7 @@ const allNetFunctions = {
                 } else if (data.user === 2) {
                     allNetFunctions.isUserTwoLogged = true;
                     setCorrectUserPawnColor();
-                    GeneratePawns();
+
                     allEvents.loading();
                     allEvents.cancelLoading();
                     allEvents.hello();

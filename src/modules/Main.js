@@ -115,16 +115,15 @@ function GeneratePawns() {
                 const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
                 scene.add(pawn_white);
             }
-            if (allNetFunctions.isUserOneLogged && allNetFunctions.isUserTwoLogged) {
-                if (pionki[i][j] === 1) {
-                    const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
-                    scene.add(pawn_white);
-                }
-                if (pionki[i][j] === 2) {
-                    const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink');
-                    scene.add(pawn_pink);
-                }
-            }
+        }
+    }
+}
+
+function removeGrayPawns() {
+    for (let i = scene.children.length - 1; i >= 0; i--) {
+        const object = scene.children[i];
+        if (object instanceof Pawn && object.owner === 'gray') {
+            scene.remove(object);
         }
     }
 }
@@ -145,6 +144,7 @@ window.addEventListener(
 );
 
 let selectedPawn = null;
+let selectedField = null;
 
 let currentUser;
 
@@ -164,18 +164,25 @@ function performRaycast() {
     const intersects = raycaster.intersectObjects(scene.children);
     if (intersects.length > 0) {
         const intersectedObject = intersects[0].object;
-        if (intersectedObject.isPawn && intersectedObject.owner === currentUser) {
+        if (intersectedObject.isPawn && !selectedPawn) {
+            // Select a pawn
             if (selectedPawn) {
-                selectedPawn.material = selectedPawn.originalMaterial;
+                selectedPawn.material = selectedPawn.originalMaterial; // Reset the material of the previously selected pawn
             }
-            const selectedMaterial = new MeshPhongMaterial({ color: 0xff0000 });
-            intersectedObject.originalMaterial = intersectedObject.material;
-            intersectedObject.material = selectedMaterial;
-            selectedPawn = intersectedObject;
+            const selectedMaterial = new MeshPhongMaterial({ color: 0xff0000 }); // Create a new material with the desired color
+            intersectedObject.originalMaterial = intersectedObject.material; // Store the original material
+            intersectedObject.material = selectedMaterial; // Apply the new material
+            selectedPawn = intersectedObject; // Store the selected pawn
+        } else if (intersectedObject.isField && selectedPawn) {
+            // Move the selected pawn to the selected field
+            selectedPawn.position.set(intersectedObject.position.x, 0.25, intersectedObject.position.z);
+            selectedPawn.material = selectedPawn.originalMaterial; // Reset the material of the selected pawn
+            selectedPawn = null; // Deselect the pawn
         }
     }
 }
 
+export { removeGrayPawns };
 export { setCorrectUserPawnColor };
 export { GeneratePawns };
 export { GameObject };

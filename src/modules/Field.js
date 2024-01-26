@@ -6,6 +6,7 @@ class Field extends Mesh {
         const material = new MeshBasicMaterial({ color: 0x00ff00 });
         super(geometry, material);
         this.position.set(x, y, z);
+        this.isField = true;
     }
 }
 
