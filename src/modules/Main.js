@@ -68,7 +68,26 @@ const white_material = new THREE.MeshBasicMaterial({ map: white_texture });
 const pawn_pink_material = new THREE.MeshBasicMaterial({ map: pawnPinkTexture });
 const pawn_white_material = new THREE.MeshBasicMaterial({ map: pawnWhiteTexture });
 
-// scene.add(cube);
+// import tlo from '../img/textures/charlesXII_hdr4k.jpg';
+
+// const loader3 = new THREE.TextureLoader();
+// const texture3 = loader3.load(tlo);
+// texture3.wrapS = THREE.RepeatWrapping;
+// texture3.wrapT = THREE.RepeatWrapping;
+// texture3.repeat.set(1, 1);
+// texture3.colorSpace = THREE.SRGBColorSpace;
+
+// // Create material
+// const material = new THREE.MeshBasicMaterial({
+//     map: texture3,
+//     side: THREE.BackSide,
+// });
+
+// // Create the cone
+// const cone = new THREE.Mesh(new THREE.ConeGeometry(500, 1000, 2000), material);
+// cone.rotation.x = Math.PI;
+// // Add the cone to the scene
+// scene.add(cone);
 
 const szachownica = [
     [1, 0, 1, 0, 1, 0, 1, 0],
