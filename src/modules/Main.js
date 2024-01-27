@@ -184,20 +184,24 @@ function performRaycast() {
     const intersects = raycaster.intersectObjects(scene.children);
     if (intersects.length > 0) {
         const intersectedObject = intersects[0].object;
-        if (intersectedObject.isPawn && intersectedObject.owner === currentUser && !selectedPawn) {
-            // Select a pawn
+        if (intersectedObject.isPawn && intersectedObject.owner === currentUser) {
             if (selectedPawn) {
-                selectedPawn.material = selectedPawn.originalMaterial; // Reset the material of the previously selected pawn
+                selectedPawn.material = selectedPawn.originalMaterial;
             }
-            const selectedMaterial = new MeshPhongMaterial({ color: 0xff0000 }); // Create a new material with the desired color
-            intersectedObject.originalMaterial = intersectedObject.material; // Store the original material
-            intersectedObject.material = selectedMaterial; // Apply the new material
-            selectedPawn = intersectedObject; // Store the selected pawn
+            const selectedMaterial = new MeshPhongMaterial({ color: 0xff0000 });
+            intersectedObject.originalMaterial = intersectedObject.material;
+            intersectedObject.material = selectedMaterial;
+            selectedPawn = intersectedObject;
         } else if (intersectedObject.isField && intersectedObject.isBlack && selectedPawn) {
-            // Move the selected pawn to the selected field
-            selectedPawn.position.set(intersectedObject.position.x, 0.25, intersectedObject.position.z);
-            selectedPawn.material = selectedPawn.originalMaterial; // Reset the material of the selected pawn
-            selectedPawn = null; // Deselect the pawn
+            const dx = Math.abs(selectedPawn.position.x - intersectedObject.position.x);
+            const dz = Math.abs(selectedPawn.position.z - intersectedObject.position.z);
+            if (dx <= 1 && dz <= 1) {
+                selectedPawn.position.set(intersectedObject.position.x, 0.25, intersectedObject.position.z);
+                selectedPawn.material = selectedPawn.originalMaterial;
+                selectedPawn = null;
+            } else {
+                console.log('Invalid move. Pawns can only move one field at a time.');
+            }
         }
     }
 }
