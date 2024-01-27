@@ -16,6 +16,7 @@ import Field from './Field.js';
 
 import { Raycaster, Vector2 } from 'three';
 import { MeshPhongMaterial } from 'three';
+import * as TWEEN from '@tweenjs/tween.js';
 
 const container = document.getElementById('root');
 const scene = new Scene();
@@ -36,7 +37,7 @@ const GameObject = {
             camera.moveInCircle(time, radius, boardCenterX, boardCenterY, boardCenterZ);
         }
         renderer.render(scene, camera.threeCamera);
-
+        TWEEN.update();
         requestAnimationFrame(GameObject.render);
     },
     setPlayer(player) {
@@ -196,9 +197,23 @@ function performRaycast() {
             const dx = Math.abs(selectedPawn.position.x - intersectedObject.position.x);
             const dz = Math.abs(selectedPawn.position.z - intersectedObject.position.z);
             if (dx <= 1 && dz <= 1) {
-                selectedPawn.position.set(intersectedObject.position.x, 0.25, intersectedObject.position.z);
-                selectedPawn.material = selectedPawn.originalMaterial;
-                selectedPawn = null;
+                new TWEEN.Tween(selectedPawn.position)
+                    .to(
+                        {
+                            x: intersectedObject.position.x,
+                            z: intersectedObject.position.z,
+                        },
+                        500
+                    )
+                    .start();
+                new TWEEN.Tween(selectedPawn.position)
+                    .to({ y: 1 }, 250)
+                    .chain(new TWEEN.Tween(selectedPawn.position).to({ y: 0.35 }, 250))
+                    .onComplete(() => {
+                        selectedPawn.material = selectedPawn.originalMaterial;
+                        selectedPawn = null;
+                    })
+                    .start();
             } else {
                 console.log('Invalid move. Pawns can only move one field at a time.');
             }
