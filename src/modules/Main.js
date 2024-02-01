@@ -72,27 +72,6 @@ const white_material = new THREE.MeshBasicMaterial({ map: white_texture });
 const pawn_pink_material = new THREE.MeshBasicMaterial({ map: pawnPinkTexture });
 const pawn_white_material = new THREE.MeshBasicMaterial({ map: pawnWhiteTexture });
 
-// import tlo from '../img/textures/charlesXII_hdr4k.jpg';
-
-// const loader3 = new THREE.TextureLoader();
-// const texture3 = loader3.load(tlo);
-// texture3.wrapS = THREE.RepeatWrapping;
-// texture3.wrapT = THREE.RepeatWrapping;
-// texture3.repeat.set(1, 1);
-// texture3.colorSpace = THREE.SRGBColorSpace;
-
-// // Create material
-// const material = new THREE.MeshBasicMaterial({
-//     map: texture3,
-//     side: THREE.BackSide,
-// });
-
-// // Create the cone
-// const cone = new THREE.Mesh(new THREE.ConeGeometry(500, 1000, 2000), material);
-// cone.rotation.x = Math.PI;
-// // Add the cone to the scene
-// scene.add(cone);
-
 const szachownica = [
     [1, 0, 1, 0, 1, 0, 1, 0],
     [0, 1, 0, 1, 0, 1, 0, 1],
@@ -187,10 +166,6 @@ window.addEventListener(
                 performRaycast();
             }
         }, 100);
-
-        // if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
-        //     performRaycast();
-        // }
     },
     false
 );
@@ -224,8 +199,30 @@ client.on('pawnMoved', (data) => {
         console.error('Could not find pawn with ID', data.id);
         return;
     }
-    pawn.position.x = data.newPosition.x;
-    pawn.position.z = data.newPosition.z;
+    // pawn.position.x = data.newPosition.x;
+    // pawn.position.z = data.newPosition.z;
+    new TWEEN.Tween(pawn.position)
+        .to(
+            {
+                x: data.newPosition.x,
+                z: data.newPosition.z,
+            },
+            500
+        )
+        .start();
+
+    new TWEEN.Tween(pawn.position)
+        .to({ y: 1 }, 250)
+        .chain(
+            new TWEEN.Tween(pawn.position).to({ y: 0.35 }, 250).onComplete(() => {
+                // pawn.material = pawn.originalMaterial;
+                // const pawnId = pawn.pawnId;
+                // const newPosition = { ...pawn.position };
+                // pawn = null;
+                // client.emit('pawnMoved', { pawnId, newPosition });
+            })
+        )
+        .start();
 
     console.log('NEW PAWNEK', pawn);
     // Update the pawn's position.
