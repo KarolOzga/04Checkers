@@ -25,6 +25,12 @@ app.use((req, res, next) => {
 
 socketio.on('connection', (client) => {
     console.log('klient się podłączył z id = ', client.id);
+    client.emit('onconnect', {
+        clientId: client.id,
+    });
+    client.on('disconnect', (reason) => {
+        console.log('klient się rozłącza', reason);
+    });
 });
 
 let activeUsers = [];
@@ -52,6 +58,6 @@ app.post('/whichPlayer', (req, res) => {
     res.json({ player: activeUsers.length, userName: req.body.userName, users: activeUsers });
 });
 
-app.listen(PORT, '0.0.0.0', function () {
+server.listen(PORT, '0.0.0.0', function () {
     console.log('start serwera na porcie ' + PORT);
 });
