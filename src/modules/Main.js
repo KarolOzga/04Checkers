@@ -131,53 +131,41 @@ const pionki = [
 let pawnId = 0;
 let pawnList = [];
 let uniquePawnList = [];
-function GeneratePawns(color) {
+
+function GeneratePawns(color, user) {
     let generatePinkIndex = 0;
     let generateGrayIndex = 0;
-    if (color === undefined) {
+
+    if (color === 'pink' && generatePinkIndex === 0) {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
                     const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink', pawnId++);
+                    pawn_pink.user = user;
                     pawnList.push(pawn_pink);
                     scene.add(pawn_pink);
                 }
+            }
+        }
+
+        generatePinkIndex = 1;
+    }
+    if (color === 'gray' && generateGrayIndex === 0) {
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 8; j++) {
                 if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
                     const pawn_white = new Pawn(pawn_white_material, i, j, 'gray', pawnId++);
+                    pawn_white.user = user;
                     pawnList.push(pawn_white);
                     scene.add(pawn_white);
                 }
             }
         }
-    } else {
-        if (color === 'pink' && generatePinkIndex === 0) {
-            for (let i = 0; i < 8; i++) {
-                for (let j = 0; j < 8; j++) {
-                    if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
-                        const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink', pawnId++);
-                        scene.add(pawn_pink);
-                    }
-                }
-            }
 
-            generatePinkIndex = 1;
-        }
-        if (color === 'gray' && generateGrayIndex === 0) {
-            for (let i = 0; i < 8; i++) {
-                for (let j = 0; j < 8; j++) {
-                    if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
-                        const pawn_white = new Pawn(pawn_white_material, i, j, 'gray', pawnId++);
-                        scene.add(pawn_white);
-                    }
-                }
-            }
-
-            generateGrayIndex = 1;
-        }
+        generateGrayIndex = 1;
     }
-
     uniquePawnList = Array.from(new Set(pawnList));
-    console.log(uniquePawnList);
+    console.log(uniquePawnList, 'unikatowe pionki');
 }
 
 const raycaster = new Raycaster();
@@ -213,31 +201,35 @@ function setCorrectUserPawnColor() {
 
 client.on('pawnMoved', (data) => {
     console.log('Received pawnMoved event', data);
-
+    console.log(scene.children.find((child) => child.isPawn && child.id === data.id));
     // Find the pawn with the given ID.
     const pawn = scene.children.find((child) => child.isPawn && child.id === data.id);
+
+    console.log('PAWNEK', pawn);
+
     if (!pawn) {
         console.error('Could not find pawn with ID', data.id);
         return;
     }
-
+    pawn.position.x = data.newPosition.x;
+    pawn.position.z = data.newPosition.z;
     // Update the pawn's position.
-    new TWEEN.Tween(pawn.position)
-        .to(
-            {
-                x: data.newPosition.x,
-                z: data.newPosition.z,
-            },
-            500
-        )
-        .start();
-    new TWEEN.Tween(pawn.position)
-        .to({ y: 1 }, 250)
-        .chain(new TWEEN.Tween(pawn.position).to({ y: 0.3 }, 250))
-        .onComplete(() => {
-            pawn.material = pawn.originalMaterial;
-        })
-        .start();
+    // new TWEEN.Tween(pawn.position)
+    //     .to(
+    //         {
+    //             x: data.newPosition.x,
+    //             z: data.newPosition.z,
+    //         },
+    //         500
+    //     )
+    //     .start();
+    // new TWEEN.Tween(pawn.position)
+    //     .to({ y: 1 }, 250)
+    //     .chain(new TWEEN.Tween(pawn.position).to({ y: 0.3 }, 250))
+    //     .onComplete(() => {
+    //         pawn.material = pawn.originalMaterial;
+    //     })
+    //     .start();
 });
 
 function performRaycast() {
@@ -258,8 +250,7 @@ function performRaycast() {
             const dz = Math.abs(selectedPawn.position.z - intersectedObject.position.z);
             if (dx <= 1 && dz <= 1) {
                 console.log('Valid move. Moving pawn.');
-                client.emit('pawnMoved', { id: selectedPawn.id, newPosition: selectedPawn.position });
-
+                // client.emit('pawnMoved', { id: selectedPawn.id, newPosition: selectedPawn.position });
                 new TWEEN.Tween(selectedPawn.position)
                     .to(
                         {
