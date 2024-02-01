@@ -40,14 +40,14 @@ const allNetFunctions = {
                     allNetFunctions.isUserOneLogged = true;
                     setCorrectUserPawnColor();
                     allEvents.hello();
-                    GeneratePawns('pink', 1);
+                    GeneratePawns('pink');
                     allEvents.loading();
                     camera.setCameraPosition(-5, 5, 3);
                     camera.setLookAt(4, 0, 3);
                 } else if (data.user === 2) {
                     allNetFunctions.isUserTwoLogged = true;
                     setCorrectUserPawnColor();
-                    GeneratePawns('gray', 2);
+                    GeneratePawns('gray');
                     allEvents.loading();
                     allEvents.cancelLoading();
                     allEvents.hello();
@@ -88,9 +88,9 @@ const allNetFunctions = {
                     }
 
                     if (this.loginData.user === 1) {
-                        GeneratePawns('gray', 1);
+                        GeneratePawns('gray');
                     } else {
-                        GeneratePawns('pink', 2);
+                        GeneratePawns('pink');
                     }
 
                     if (this.isUserOneLogged && this.isUserTwoLogged) {

@@ -128,20 +128,21 @@ const pionki = [
     [0, 1, 0, 1, 0, 1, 0, 1],
 ];
 
-let pawnId = 0;
+let pawnId0 = 0;
+let pawnId1 = 8;
+
 let pawnList = [];
 let uniquePawnList = [];
 
-function GeneratePawns(color, user) {
+function GeneratePawns(color) {
     let generatePinkIndex = 0;
     let generateGrayIndex = 0;
-
     if (color === 'pink' && generatePinkIndex === 0) {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
-                    const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink', pawnId++);
-                    pawn_pink.user = user;
+                    const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink', pawnId0++);
+                    pawn_pink.user = 'pink';
                     pawnList.push(pawn_pink);
                     scene.add(pawn_pink);
                 }
@@ -154,8 +155,8 @@ function GeneratePawns(color, user) {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
-                    const pawn_white = new Pawn(pawn_white_material, i, j, 'gray', pawnId++);
-                    pawn_white.user = user;
+                    const pawn_white = new Pawn(pawn_white_material, i, j, 'gray', pawnId1++);
+                    pawn_white.user = 'gray';
                     pawnList.push(pawn_white);
                     scene.add(pawn_white);
                 }
@@ -201,9 +202,10 @@ function setCorrectUserPawnColor() {
 
 client.on('pawnMoved', (data) => {
     console.log('Received pawnMoved event', data);
-    console.log(scene.children.find((child) => child.isPawn && child.id === data.id));
     // Find the pawn with the given ID.
-    const pawn = scene.children.find((child) => child.isPawn && child.id === data.id);
+    console.log(currentUser, 'CURRENT USER');
+
+    const pawn = scene.children.find((child) => child.isPawn && child.pawnId === data.pawnId);
 
     console.log('PAWNEK', pawn);
 
@@ -213,6 +215,8 @@ client.on('pawnMoved', (data) => {
     }
     pawn.position.x = data.newPosition.x;
     pawn.position.z = data.newPosition.z;
+
+    console.log('NEW PAWNEK', pawn);
     // Update the pawn's position.
     // new TWEEN.Tween(pawn.position)
     //     .to(
@@ -249,8 +253,6 @@ function performRaycast() {
             const dx = Math.abs(selectedPawn.position.x - intersectedObject.position.x);
             const dz = Math.abs(selectedPawn.position.z - intersectedObject.position.z);
             if (dx <= 1 && dz <= 1) {
-                console.log('Valid move. Moving pawn.');
-                // client.emit('pawnMoved', { id: selectedPawn.id, newPosition: selectedPawn.position });
                 new TWEEN.Tween(selectedPawn.position)
                     .to(
                         {
@@ -260,16 +262,19 @@ function performRaycast() {
                         500
                     )
                     .start();
+
                 new TWEEN.Tween(selectedPawn.position)
                     .to({ y: 1 }, 250)
-                    .chain(new TWEEN.Tween(selectedPawn.position).to({ y: 0.35 }, 250))
-                    .onComplete(() => {
-                        selectedPawn.material = selectedPawn.originalMaterial;
-                        selectedPawn = null;
-                    })
+                    .chain(
+                        new TWEEN.Tween(selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
+                            selectedPawn.material = selectedPawn.originalMaterial;
+                            const pawnId = selectedPawn.pawnId;
+                            const newPosition = { ...selectedPawn.position };
+                            selectedPawn = null;
+                            client.emit('pawnMoved', { pawnId, newPosition });
+                        })
+                    )
                     .start();
-
-                client.emit('pawnMoved', { id: selectedPawn.id, newPosition: selectedPawn.position });
             } else {
                 console.log('Invalid move. Pawns can only move one field at a time.');
             }
