@@ -8,8 +8,12 @@ const cors = require('cors');
 const http = require('http');
 const server = http.createServer(app); // tu zmiana
 const { Server } = require('socket.io');
-const socketio = new Server(server);
-
+const socketio = new Server(server, {
+    cors: {
+        origin: 'http://192.168.0.171:3000',
+        methods: ['GET', 'POST'],
+    },
+});
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('dist'));
@@ -31,6 +35,11 @@ socketio.on('connection', (client) => {
     client.on('disconnect', (reason) => {
         console.log('klient się rozłącza', reason);
     });
+
+    client.on('pawnMoved', (data) => {
+        client.broadcast.emit('pawnMoved', data);
+    });
+    client.emit('pawnMoved', { clientId: client.id });
 });
 
 let activeUsers = [];

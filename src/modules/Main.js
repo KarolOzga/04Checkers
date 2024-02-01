@@ -14,6 +14,14 @@ import { Raycaster, Vector2 } from 'three';
 import { MeshPhongMaterial } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
 
+import { io } from 'https://cdn.socket.io/4.6.0/socket.io.esm.min.js';
+const client = io('ws://192.168.0.171:3000');
+
+window.addEventListener('DOMContentLoaded', () => {
+    client.on('connect', () => {
+        console.log('Połączono z serwerem');
+    });
+});
 const container = document.getElementById('root');
 const scene = new Scene();
 const renderer = new Renderer(scene, container);
@@ -120,6 +128,9 @@ const pionki = [
     [0, 1, 0, 1, 0, 1, 0, 1],
 ];
 
+let pawnId = 0;
+let pawnList = [];
+let uniquePawnList = [];
 function GeneratePawns(color) {
     let generatePinkIndex = 0;
     let generateGrayIndex = 0;
@@ -127,11 +138,13 @@ function GeneratePawns(color) {
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
-                    const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink');
+                    const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink', pawnId++);
+                    pawnList.push(pawn_pink);
                     scene.add(pawn_pink);
                 }
                 if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
-                    const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
+                    const pawn_white = new Pawn(pawn_white_material, i, j, 'gray', pawnId++);
+                    pawnList.push(pawn_white);
                     scene.add(pawn_white);
                 }
             }
@@ -141,7 +154,7 @@ function GeneratePawns(color) {
             for (let i = 0; i < 8; i++) {
                 for (let j = 0; j < 8; j++) {
                     if (allNetFunctions.isUserOneLogged && pionki[i][j] === 2) {
-                        const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink');
+                        const pawn_pink = new Pawn(pawn_pink_material, i, j, 'pink', pawnId++);
                         scene.add(pawn_pink);
                     }
                 }
@@ -153,7 +166,7 @@ function GeneratePawns(color) {
             for (let i = 0; i < 8; i++) {
                 for (let j = 0; j < 8; j++) {
                     if (allNetFunctions.isUserTwoLogged && pionki[i][j] === 1) {
-                        const pawn_white = new Pawn(pawn_white_material, i, j, 'gray');
+                        const pawn_white = new Pawn(pawn_white_material, i, j, 'gray', pawnId++);
                         scene.add(pawn_white);
                     }
                 }
@@ -162,6 +175,9 @@ function GeneratePawns(color) {
             generateGrayIndex = 1;
         }
     }
+
+    uniquePawnList = Array.from(new Set(pawnList));
+    console.log(uniquePawnList);
 }
 
 const raycaster = new Raycaster();
@@ -195,6 +211,35 @@ function setCorrectUserPawnColor() {
     }
 }
 
+client.on('pawnMoved', (data) => {
+    console.log('Received pawnMoved event', data);
+
+    // Find the pawn with the given ID.
+    const pawn = scene.children.find((child) => child.isPawn && child.id === data.id);
+    if (!pawn) {
+        console.error('Could not find pawn with ID', data.id);
+        return;
+    }
+
+    // Update the pawn's position.
+    new TWEEN.Tween(pawn.position)
+        .to(
+            {
+                x: data.newPosition.x,
+                z: data.newPosition.z,
+            },
+            500
+        )
+        .start();
+    new TWEEN.Tween(pawn.position)
+        .to({ y: 1 }, 250)
+        .chain(new TWEEN.Tween(pawn.position).to({ y: 0.3 }, 250))
+        .onComplete(() => {
+            pawn.material = pawn.originalMaterial;
+        })
+        .start();
+});
+
 function performRaycast() {
     raycaster.setFromCamera(mouse, camera.threeCamera);
     const intersects = raycaster.intersectObjects(scene.children);
@@ -212,6 +257,9 @@ function performRaycast() {
             const dx = Math.abs(selectedPawn.position.x - intersectedObject.position.x);
             const dz = Math.abs(selectedPawn.position.z - intersectedObject.position.z);
             if (dx <= 1 && dz <= 1) {
+                console.log('Valid move. Moving pawn.');
+                client.emit('pawnMoved', { id: selectedPawn.id, newPosition: selectedPawn.position });
+
                 new TWEEN.Tween(selectedPawn.position)
                     .to(
                         {
@@ -229,6 +277,8 @@ function performRaycast() {
                         selectedPawn = null;
                     })
                     .start();
+
+                client.emit('pawnMoved', { id: selectedPawn.id, newPosition: selectedPawn.position });
             } else {
                 console.log('Invalid move. Pawns can only move one field at a time.');
             }
