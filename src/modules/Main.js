@@ -2,18 +2,14 @@ import * as THREE from 'three';
 import Renderer from './Renderer.js';
 import Camera from './Camera.js';
 import { Scene } from 'three';
-
 import black_board_texture from '../img/textures/black_board_texture.png';
 import white_board_texture from '../img/textures/white_board_texture.png';
 import pink_pawn_texture from '../img/textures/pink_pawn_texture.png';
 import white_pawn_texture from '../img/textures/white_pawn_texture.png';
-
 import { allNetFunctions } from './Net.js';
 import { allEvents } from './UI.js';
-
 import Pawn from './Pawn.js';
 import Field from './Field.js';
-
 import { Raycaster, Vector2 } from 'three';
 import { MeshPhongMaterial } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';

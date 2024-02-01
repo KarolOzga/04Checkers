@@ -5,6 +5,11 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+const http = require('http');
+const server = http.createServer(app); // tu zmiana
+const { Server } = require('socket.io');
+const socketio = new Server(server);
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('dist'));
@@ -16,6 +21,10 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
     next();
+});
+
+socketio.on('connection', (client) => {
+    console.log('klient się podłączył z id = ', client.id);
 });
 
 let activeUsers = [];
