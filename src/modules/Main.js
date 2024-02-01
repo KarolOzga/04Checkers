@@ -172,14 +172,25 @@ function GeneratePawns(color) {
 const raycaster = new Raycaster();
 const mouse = new Vector2();
 
+let wait = null;
+
 window.addEventListener(
     'click',
     (event) => {
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-        if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
-            performRaycast();
+        if (wait) {
+            clearTimeout(wait);
         }
+        wait = setTimeout(() => {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
+                performRaycast();
+            }
+        }, 100);
+
+        // if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
+        //     performRaycast();
+        // }
     },
     false
 );
