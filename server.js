@@ -30,13 +30,30 @@ app.use((req, res, next) => {
     next();
 });
 
+let client1 = null;
+let client2 = null;
+
 socketio.on('connection', (client) => {
     console.log('klient się podłączył z id = ', client.id);
+    if (client1 === null) {
+        client1 = client.id;
+    } else {
+        client2 = client.id;
+    }
+
+    console.log('client1', client1);
+    console.log('client2', client2);
+
     client.emit('onconnect', {
         clientId: client.id,
     });
     client.on('disconnect', (reason) => {
         console.log('klient się rozłącza', reason);
+        if (client.id === client1) {
+            client1 = null;
+        } else if (client.id === client2) {
+            client2 = null;
+        }
     });
 
     client.on('pawnMoved', (data) => {
@@ -48,7 +65,18 @@ socketio.on('connection', (client) => {
         client.broadcast.emit('timeUp', data);
         // client.emit('timeUp', data);
     });
+
+    client.on('secondUserConnected', (data) => {
+        console.log('ELO ELO 3 2 0, server');
+        if (client2) {
+            socketio.to(client2).emit('secondUserConnected', data);
+        }
+    });
 });
+
+// socketio.on('secondUserConnected', (data) => {
+//     console.log('ELO ELO 3 2 0, server');
+// });
 
 let activeUsers = [];
 

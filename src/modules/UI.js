@@ -98,7 +98,7 @@ const allEvents = {
         let loading = document.createElement('div');
         loading.style.fontSize = '1.5em';
         loading.style.color = 'white';
-        loading.innerText = `Waiting for user ${user} to move...`;
+        loading.innerText = `Waiting for second player to move...`;
         overlay.appendChild(loading);
 
         let countdown = document.createElement('div');

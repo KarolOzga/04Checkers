@@ -96,8 +96,15 @@ const allNetFunctions = {
                     }
 
                     if (this.isUserOneLogged && this.isUserTwoLogged) {
+                        client.emit('secondUserConnected');
+
+                        client.on('secondUserConnected', (data) => {
+                            console.log('ELO ELO 3 2 0, client :3');
+                            allEvents.waitForSecondPlayerMove('pink');
+                        });
                         allEvents.cancelLoading();
-                        // client.emit('startGame', { data: 'start' });
+                        // client.emit('timeUp');
+                        // allEvents.waitForSecondPlayerMove('pink');
                     }
                     console.log(data.player);
                 });
