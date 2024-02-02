@@ -81,21 +81,48 @@ const allEvents = {
     },
     waitForSecondPlayerMove(user) {
         // let inWhichPlayerPlane = user === 'pink' ? 'gray' : 'pink';
-
-        let loadingPlane = document.createElement('div');
-        loadingPlane.classList.add('loadingPlane');
-        document.body.appendChild(loadingPlane);
+        let overlay = document.createElement('div');
+        overlay.id = 'overlay';
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent black
+        overlay.style.display = 'flex';
+        overlay.style.flexDirection = 'column';
+        overlay.style.justifyContent = 'center';
+        overlay.style.alignItems = 'center';
+        document.body.appendChild(overlay);
 
         let loading = document.createElement('div');
-        loading.classList.add('loading');
-        loadingPlane.appendChild(loading);
-
+        loading.style.fontSize = '1.5em';
+        loading.style.color = 'white';
         loading.innerText = `Waiting for user ${user} to move...`;
+        overlay.appendChild(loading);
 
-        let loadingGif = document.createElement('div');
-        loadingGif.classList.add('loadingGif');
+        let countdown = document.createElement('div');
+        countdown.style.fontSize = '2em';
+        countdown.style.color = 'white';
+        overlay.appendChild(countdown);
 
-        loading.appendChild(loadingGif);
+        let timeLeft = 30;
+        countdown.innerText = timeLeft;
+
+        let timerId = setInterval(() => {
+            timeLeft--;
+            countdown.innerText = timeLeft;
+            if (timeLeft <= 0) {
+                clearInterval(timerId);
+                overlay.parentNode.removeChild(overlay);
+            }
+        }, 1000);
+    },
+    removeOverlay() {
+        let overlay = document.getElementById('overlay');
+        if (overlay) {
+            overlay.parentNode.removeChild(overlay);
+        }
     },
 };
 
