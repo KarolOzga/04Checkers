@@ -17,6 +17,8 @@ import * as TWEEN from '@tweenjs/tween.js';
 import { io } from 'https://cdn.socket.io/4.6.0/socket.io.esm.min.js';
 const client = io('ws://192.168.0.171:3000');
 
+export { client };
+
 window.addEventListener('DOMContentLoaded', () => {
     client.on('connect', () => {
         console.log('Połączono z serwerem');
@@ -186,6 +188,11 @@ function setCorrectUserPawnColor() {
     }
 }
 
+client.on('timeUp', () => {
+    console.log('ELOELOELOELO TIME IS OVER');
+    allEvents.waitForSecondPlayerMove(currentUser);
+});
+
 client.on('pawnMoved', (data) => {
     console.log('Received pawnMoved event', data);
     // Find the pawn with the given ID.
@@ -200,8 +207,6 @@ client.on('pawnMoved', (data) => {
         return;
     }
     allEvents.removeOverlay();
-    // pawn.position.x = data.newPosition.x;
-    // pawn.position.z = data.newPosition.z;
     new TWEEN.Tween(pawn.position)
         .to(
             {

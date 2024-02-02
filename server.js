@@ -43,6 +43,11 @@ socketio.on('connection', (client) => {
         client.broadcast.emit('pawnMoved', data);
     });
     client.emit('pawnMoved', { clientId: client.id });
+
+    client.on('timeUp', (data) => {
+        client.broadcast.emit('timeUp', data);
+        // client.emit('timeUp', data);
+    });
 });
 
 let activeUsers = [];

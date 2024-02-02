@@ -4,6 +4,8 @@ import { GeneratePawns } from './Main.js';
 import { allEvents } from './UI.js';
 import { setCorrectUserPawnColor } from './Main.js';
 
+import { client } from './Main.js';
+
 const allNetFunctions = {
     isUserOneLogged: false,
     isUserTwoLogged: false,
@@ -95,6 +97,7 @@ const allNetFunctions = {
 
                     if (this.isUserOneLogged && this.isUserTwoLogged) {
                         allEvents.cancelLoading();
+                        // client.emit('startGame', { data: 'start' });
                     }
                     console.log(data.player);
                 });
