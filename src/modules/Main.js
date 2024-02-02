@@ -162,6 +162,11 @@ window.addEventListener(
             clearTimeout(wait);
         }
         wait = setTimeout(() => {
+            let overlay = document.getElementById('overlay');
+            if (overlay) {
+                return;
+            }
+
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
             if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
