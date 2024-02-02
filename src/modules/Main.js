@@ -199,6 +199,7 @@ client.on('pawnMoved', (data) => {
         console.error('Could not find pawn with ID', data.id);
         return;
     }
+    allEvents.cancelLoading();
     // pawn.position.x = data.newPosition.x;
     // pawn.position.z = data.newPosition.z;
     new TWEEN.Tween(pawn.position)
@@ -280,6 +281,8 @@ function performRaycast() {
                             const newPosition = { ...selectedPawn.position };
                             selectedPawn = null;
                             client.emit('pawnMoved', { pawnId, newPosition });
+                            allNetFunctions.setPlayerMove(pawnId);
+                            allNetFunctions.getPlayerMove();
                         })
                     )
                     .start();

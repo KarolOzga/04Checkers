@@ -79,6 +79,24 @@ const allEvents = {
         let user = allNetFunctions.loginData.user;
         return user === 1 ? 'pink' : 'gray';
     },
+    waitForSecondPlayerMove(user) {
+        // let inWhichPlayerPlane = user === 'pink' ? 'gray' : 'pink';
+
+        let loadingPlane = document.createElement('div');
+        loadingPlane.classList.add('loadingPlane');
+        document.body.appendChild(loadingPlane);
+
+        let loading = document.createElement('div');
+        loading.classList.add('loading');
+        loadingPlane.appendChild(loading);
+
+        loading.innerText = `Waiting for user ${user} to move...`;
+
+        let loadingGif = document.createElement('div');
+        loadingGif.classList.add('loadingGif');
+
+        loading.appendChild(loadingGif);
+    },
 };
 
 export { allEvents };

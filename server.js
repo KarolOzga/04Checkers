@@ -17,6 +17,9 @@ const socketio = new Server(server, {
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static('dist'));
+app.use(express.json());
+
+let setPlayerMove = 'pink';
 
 // app.use(express.static(path.join(__dirname, '/src/modules')));
 
@@ -65,6 +68,20 @@ app.post('/resetUsers', (req, res) => {
 
 app.post('/whichPlayer', (req, res) => {
     res.json({ player: activeUsers.length, userName: req.body.userName, users: activeUsers });
+});
+
+app.post('/setPlayerMove', (req, res) => {
+    console.log(req.body);
+    if (req.body.setPlayerMove <= 8) {
+        setPlayerMove = 'gray';
+    } else if (req.body.setPlayerMove > 8) {
+        setPlayerMove = 'pink';
+    }
+    res.json({ player: setPlayerMove });
+});
+
+app.get('/whichUserTurn', (req, res) => {
+    res.json({ player: setPlayerMove });
 });
 
 server.listen(PORT, '0.0.0.0', function () {

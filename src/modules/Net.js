@@ -125,6 +125,37 @@ const allNetFunctions = {
             })
             .catch((error) => console.log(error));
     },
+    setPlayerMove(player) {
+        fetch('http://192.168.0.171:3000/setPlayerMove', {
+            // replace with your server endpoint
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ setPlayerMove: player }),
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    },
+    getPlayerMove() {
+        fetch('http://192.168.0.171:3000/whichUserTurn', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data, 'data');
+                let whoseMove = data.player;
+                allEvents.waitForSecondPlayerMove(whoseMove);
+            });
+    },
 };
 
 export { allNetFunctions };
