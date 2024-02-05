@@ -75,8 +75,6 @@ const white_texture = textureLoader.load(white_board_texture);
 const pawnPinkTexture = textureLoader.load(pink_pawn_texture);
 const pawnWhiteTexture = textureLoader.load(white_pawn_texture);
 
-const geometry = new THREE.BoxGeometry(1, 0.5, 1);
-
 const black_material = new THREE.MeshBasicMaterial({ map: black_texture });
 const white_material = new THREE.MeshBasicMaterial({ map: white_texture });
 const pawn_pink_material = new THREE.MeshBasicMaterial({ map: pawnPinkTexture });
@@ -155,7 +153,6 @@ function GeneratePawns(color) {
         generateGrayIndex = 1;
     }
     uniquePawnList = Array.from(new Set(pawnList));
-    console.log(uniquePawnList, 'unikatowe pionki');
 }
 
 let wait = null;
@@ -183,10 +180,8 @@ window.addEventListener(
 );
 
 function setCorrectUserPawnColor() {
-    console.log('{ULTRA DEBUG}', allNetFunctions.isUserOneLogged, allNetFunctions.isUserTwoLogged);
     if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
         currentUser = allEvents.selectUser();
-        console.log('{ULTRA DEBUG}', currentUser);
         raycaster = new Raycaster(camera.threeCamera, scene, currentUser);
         raycaster.performRaycast(mouse);
     } else {
@@ -195,23 +190,15 @@ function setCorrectUserPawnColor() {
 }
 
 client.on('timeUp', () => {
-    console.log('ELOELOELOELO TIME IS OVER');
     allEvents.waitForSecondPlayerMove(currentUser);
 });
 
 client.on('pawnMoved', (data) => {
-    console.log('Received pawnMoved event', data);
-    // Find the pawn with the given ID.
-    console.log(currentUser, 'CURRENT USER');
-
     const pawn = scene.children.find((child) => child.isPawn && child.pawnId === data.pawnId);
 
     const oldPosition = { x: pawn.position.x, z: pawn.position.z };
 
-    console.log('PAWNEK', pawn);
-
     if (!pawn) {
-        console.error('Could not find pawn with ID', data.id);
         return;
     }
     allEvents.removeOverlay();
@@ -231,33 +218,9 @@ client.on('pawnMoved', (data) => {
             new TWEEN.Tween(pawn.position).to({ y: 0.35 }, 250).onComplete(() => {
                 allNetFunctions.fields2D[oldPosition.x][oldPosition.z].isFree = true;
                 allNetFunctions.fields2D[data.newPosition.x][data.newPosition.z].isFree = false;
-                // pawn.material = pawn.originalMaterial;
-                // const pawnId = pawn.pawnId;
-                // const newPosition = { ...pawn.position };
-                // pawn = null;
-                // client.emit('pawnMoved', { pawnId, newPosition });
             })
         )
         .start();
-
-    console.log('NEW PAWNEK', pawn);
-    // Update the pawn's position.
-    // new TWEEN.Tween(pawn.position)
-    //     .to(
-    //         {
-    //             x: data.newPosition.x,
-    //             z: data.newPosition.z,
-    //         },
-    //         500
-    //     )
-    //     .start();
-    // new TWEEN.Tween(pawn.position)
-    //     .to({ y: 1 }, 250)
-    //     .chain(new TWEEN.Tween(pawn.position).to({ y: 0.3 }, 250))
-    //     .onComplete(() => {
-    //         pawn.material = pawn.originalMaterial;
-    //     })
-    //     .start();
 });
 
 export { setCorrectUserPawnColor };
