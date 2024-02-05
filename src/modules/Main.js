@@ -10,9 +10,11 @@ import { allNetFunctions } from './Net.js';
 import { allEvents } from './UI.js';
 import Pawn from './Pawn.js';
 import Field from './Field.js';
-import { Raycaster, Vector2 } from 'three';
+import { Vector2 } from 'three';
 import { MeshPhongMaterial } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
+
+import Raycaster from './Raycaster.js';
 
 import { io } from 'https://cdn.socket.io/4.6.0/socket.io.esm.min.js';
 const client = io('ws://192.168.0.171:3000');
@@ -24,10 +26,14 @@ window.addEventListener('DOMContentLoaded', () => {
         console.log('Połączono z serwerem');
     });
 });
+
 const container = document.getElementById('root');
 const scene = new Scene();
 const renderer = new Renderer(scene, container);
 const camera = new Camera(renderer.threeRenderer);
+const mouse = new Vector2();
+let currentUser;
+let raycaster;
 
 export { scene };
 
@@ -75,8 +81,6 @@ const black_material = new THREE.MeshBasicMaterial({ map: black_texture });
 const white_material = new THREE.MeshBasicMaterial({ map: white_texture });
 const pawn_pink_material = new THREE.MeshBasicMaterial({ map: pawnPinkTexture });
 const pawn_white_material = new THREE.MeshBasicMaterial({ map: pawnWhiteTexture });
-
-let tablicaPionkow = [];
 
 const szachownica = [
     [1, 0, 1, 0, 1, 0, 1, 0],
@@ -154,9 +158,6 @@ function GeneratePawns(color) {
     console.log(uniquePawnList, 'unikatowe pionki');
 }
 
-const raycaster = new Raycaster();
-const mouse = new Vector2();
-
 let wait = null;
 
 window.addEventListener(
@@ -174,23 +175,20 @@ window.addEventListener(
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
             if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
-                performRaycast();
+                raycaster.performRaycast(mouse);
             }
         }, 100);
     },
     false
 );
 
-let selectedPawn = null;
-
-let currentUser;
-
 function setCorrectUserPawnColor() {
     console.log('{ULTRA DEBUG}', allNetFunctions.isUserOneLogged, allNetFunctions.isUserTwoLogged);
     if (allNetFunctions.isUserOneLogged || allNetFunctions.isUserTwoLogged) {
         currentUser = allEvents.selectUser();
         console.log('{ULTRA DEBUG}', currentUser);
-        performRaycast();
+        raycaster = new Raycaster(camera.threeCamera, scene, currentUser);
+        raycaster.performRaycast(mouse);
     } else {
         currentUser = null;
     }
@@ -261,69 +259,6 @@ client.on('pawnMoved', (data) => {
     //     })
     //     .start();
 });
-
-function performRaycast() {
-    raycaster.setFromCamera(mouse, camera.threeCamera);
-    const intersects = raycaster.intersectObjects(scene.children);
-    if (intersects.length > 0) {
-        const intersectedObject = intersects[0].object;
-        if (intersectedObject.isPawn && intersectedObject.owner === currentUser) {
-            if (selectedPawn) {
-                selectedPawn.material = selectedPawn.originalMaterial;
-            }
-            const selectedMaterial = new MeshPhongMaterial({ color: 0xff0000 });
-            intersectedObject.originalMaterial = intersectedObject.material;
-            intersectedObject.material = selectedMaterial;
-            selectedPawn = intersectedObject;
-        } else if (intersectedObject.isField && intersectedObject.isBlack && selectedPawn && intersectedObject.isFree) {
-            const dx = Math.abs(selectedPawn.position.x - intersectedObject.position.x);
-            const dz = Math.abs(selectedPawn.position.z - intersectedObject.position.z);
-
-            console.log(allNetFunctions.fields2D[selectedPawn.position.x][selectedPawn.position.z], 'OLD FIELD');
-
-            allNetFunctions.fields2D[selectedPawn.position.x][selectedPawn.position.z].isFree = true;
-
-            console.log(intersectedObject, 'INTERSECTED OBJECT');
-
-            if (dx <= 1 && dz <= 1) {
-                new TWEEN.Tween(selectedPawn.position)
-                    .to(
-                        {
-                            x: intersectedObject.position.x,
-                            z: intersectedObject.position.z,
-                        },
-                        500
-                    )
-                    .start();
-
-                new TWEEN.Tween(selectedPawn.position)
-                    .to({ y: 1 }, 250)
-                    .chain(
-                        new TWEEN.Tween(selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
-                            selectedPawn.material = selectedPawn.originalMaterial;
-                            const pawnId = selectedPawn.pawnId;
-                            const newPosition = { ...selectedPawn.position };
-
-                            console.log(allNetFunctions.fields2D[selectedPawn.position.x][selectedPawn.position.z], 'NEW FIELD');
-
-                            allNetFunctions.fields2D[selectedPawn.position.x][selectedPawn.position.z].isFree = false;
-                            console.log(intersectedObject, 'INTERSECTED OBJECT');
-
-                            selectedPawn = null;
-                            client.emit('pawnMoved', { pawnId, newPosition });
-                            allNetFunctions.setPlayerMove(pawnId);
-                            allNetFunctions.getPlayerMove();
-                        })
-                    )
-                    .start();
-            } else {
-                console.log('Invalid move. Pawns can only move one field at a time.');
-            }
-        } else if (!intersectedObject.isFree) {
-            console.log('Invalid move. Field is already occupied');
-        }
-    }
-}
 
 export { setCorrectUserPawnColor };
 export { GeneratePawns };
