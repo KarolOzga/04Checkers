@@ -208,6 +208,8 @@ client.on('pawnMoved', (data) => {
 
     const pawn = scene.children.find((child) => child.isPawn && child.pawnId === data.pawnId);
 
+    const oldPosition = { x: pawn.position.x, z: pawn.position.z };
+
     console.log('PAWNEK', pawn);
 
     if (!pawn) {
@@ -229,6 +231,8 @@ client.on('pawnMoved', (data) => {
         .to({ y: 1 }, 250)
         .chain(
             new TWEEN.Tween(pawn.position).to({ y: 0.35 }, 250).onComplete(() => {
+                allNetFunctions.fields2D[oldPosition.x][oldPosition.z].isFree = true;
+                allNetFunctions.fields2D[data.newPosition.x][data.newPosition.z].isFree = false;
                 // pawn.material = pawn.originalMaterial;
                 // const pawnId = pawn.pawnId;
                 // const newPosition = { ...pawn.position };
@@ -315,6 +319,8 @@ function performRaycast() {
             } else {
                 console.log('Invalid move. Pawns can only move one field at a time.');
             }
+        } else if (!intersectedObject.isFree) {
+            console.log('Invalid move. Field is already occupied');
         }
     }
 }
