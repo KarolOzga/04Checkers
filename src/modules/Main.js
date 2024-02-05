@@ -13,19 +13,10 @@ import Field from './Field.js';
 import { Vector2 } from 'three';
 import { MeshPhongMaterial } from 'three';
 import * as TWEEN from '@tweenjs/tween.js';
-
 import Raycaster from './Raycaster.js';
-
 import { io } from 'https://cdn.socket.io/4.6.0/socket.io.esm.min.js';
+
 const client = io('ws://192.168.0.171:3000');
-
-export { client };
-
-window.addEventListener('DOMContentLoaded', () => {
-    client.on('connect', () => {
-        console.log('Połączono z serwerem');
-    });
-});
 
 const container = document.getElementById('root');
 const scene = new Scene();
@@ -34,8 +25,6 @@ const camera = new Camera(renderer.threeRenderer);
 const mouse = new Vector2();
 let currentUser;
 let raycaster;
-
-export { scene };
 
 const GameObject = {
     player1: null,
@@ -227,3 +216,5 @@ export { setCorrectUserPawnColor };
 export { GeneratePawns };
 export { GameObject };
 export { camera };
+export { client };
+export { scene };
