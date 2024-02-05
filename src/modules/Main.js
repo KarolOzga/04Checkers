@@ -29,6 +29,8 @@ const scene = new Scene();
 const renderer = new Renderer(scene, container);
 const camera = new Camera(renderer.threeRenderer);
 
+export { scene };
+
 const GameObject = {
     player1: null,
     player2: null,
@@ -73,6 +75,8 @@ const black_material = new THREE.MeshBasicMaterial({ map: black_texture });
 const white_material = new THREE.MeshBasicMaterial({ map: white_texture });
 const pawn_pink_material = new THREE.MeshBasicMaterial({ map: pawnPinkTexture });
 const pawn_white_material = new THREE.MeshBasicMaterial({ map: pawnWhiteTexture });
+
+let tablicaPionkow = [];
 
 const szachownica = [
     [1, 0, 1, 0, 1, 0, 1, 0],
@@ -178,7 +182,6 @@ window.addEventListener(
 );
 
 let selectedPawn = null;
-let selectedField = null;
 
 let currentUser;
 
@@ -268,9 +271,16 @@ function performRaycast() {
             intersectedObject.originalMaterial = intersectedObject.material;
             intersectedObject.material = selectedMaterial;
             selectedPawn = intersectedObject;
-        } else if (intersectedObject.isField && intersectedObject.isBlack && selectedPawn) {
+        } else if (intersectedObject.isField && intersectedObject.isBlack && selectedPawn && intersectedObject.isFree) {
             const dx = Math.abs(selectedPawn.position.x - intersectedObject.position.x);
             const dz = Math.abs(selectedPawn.position.z - intersectedObject.position.z);
+
+            console.log(allNetFunctions.fields2D[selectedPawn.position.x][selectedPawn.position.z], 'OLD FIELD');
+
+            allNetFunctions.fields2D[selectedPawn.position.x][selectedPawn.position.z].isFree = true;
+
+            console.log(intersectedObject, 'INTERSECTED OBJECT');
+
             if (dx <= 1 && dz <= 1) {
                 new TWEEN.Tween(selectedPawn.position)
                     .to(
@@ -289,6 +299,12 @@ function performRaycast() {
                             selectedPawn.material = selectedPawn.originalMaterial;
                             const pawnId = selectedPawn.pawnId;
                             const newPosition = { ...selectedPawn.position };
+
+                            console.log(allNetFunctions.fields2D[selectedPawn.position.x][selectedPawn.position.z], 'NEW FIELD');
+
+                            allNetFunctions.fields2D[selectedPawn.position.x][selectedPawn.position.z].isFree = false;
+                            console.log(intersectedObject, 'INTERSECTED OBJECT');
+
                             selectedPawn = null;
                             client.emit('pawnMoved', { pawnId, newPosition });
                             allNetFunctions.setPlayerMove(pawnId);

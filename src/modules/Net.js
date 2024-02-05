@@ -5,11 +5,14 @@ import { allEvents } from './UI.js';
 import { setCorrectUserPawnColor } from './Main.js';
 
 import { client } from './Main.js';
+import { scene } from './Main.js';
 
 const allNetFunctions = {
     isUserOneLogged: false,
     isUserTwoLogged: false,
     loginData: null,
+    fields: [],
+    fields2D: [],
 
     loginUser(userName) {
         let userNameAsParametr = userName;
@@ -103,6 +106,24 @@ const allNetFunctions = {
                             allEvents.waitForSecondPlayerMove('pink');
                         });
                         allEvents.cancelLoading();
+
+                        // console.log(scene.children, 'scene.children');
+
+                        for (let i = 0; i < scene.children.length; i++) {
+                            if (scene.children[i].isField) {
+                                this.fields.push(scene.children[i]);
+                            }
+                        }
+
+                        for (let i = 0; i < 8; i++) {
+                            this.fields2D[i] = [];
+                            for (let j = 0; j < 8; j++) {
+                                this.fields2D[i][j] = this.fields[i * 8 + j];
+                            }
+                        }
+
+                        console.log(this.fields, 'this.fields');
+                        console.log(this.fields2D, 'fields2D');
                         // client.emit('timeUp');
                         // allEvents.waitForSecondPlayerMove('pink');
                     }

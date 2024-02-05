@@ -8,6 +8,15 @@ class Field extends Mesh {
         this.position.set(x, y, z);
         this.isField = true;
         this.isBlack = isBlack;
+        this.isFree = true;
+    }
+
+    setOccupied() {
+        this.isFree = false;
+    }
+
+    setFree() {
+        this.isFree = true;
     }
 }
 
