@@ -22,6 +22,39 @@ export default class Raycaster {
                     this.selectedPawn.material = this.selectedPawn.originalMaterial;
                 }
                 const selectedMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
+
+                console.log(allNetFunctions.fields2D, 'FIELDS');
+                console.log(intersectedObject.position, 'POSITION OF SELECTED PAWN');
+
+                // console.log("{DEBUG, CHECKING FIELDS POSITIONS}")
+                // console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1]);
+                // console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1]);
+                // console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1]);
+                // console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1]);
+
+                let acceptableField = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+
+                if (allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree) {
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].originalMaterial =
+                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].material;
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].material = acceptableField;
+                }
+                if (allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree) {
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].originalMaterial =
+                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].material;
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].material = acceptableField;
+                }
+                if (allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree) {
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].originalMaterial =
+                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].material;
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].material = acceptableField;
+                }
+                if (allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree) {
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].originalMaterial =
+                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].material;
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].material = acceptableField;
+                }
+
                 intersectedObject.originalMaterial = intersectedObject.material;
                 intersectedObject.material = selectedMaterial;
                 this.selectedPawn = intersectedObject;
@@ -55,6 +88,21 @@ export default class Raycaster {
                 .chain(
                     new TWEEN.Tween(this.selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
                         this.selectedPawn.material = this.selectedPawn.originalMaterial;
+
+                        console.log(allNetFunctions.fields2D);
+
+                        for (let i = 0; i < 8; i++) {
+                            for (let j = 0; j < 8; j++) {
+                                let color = allNetFunctions.fields2D[i][j].material.color;
+                                if (color.r === 0 && color.g === 1 && color.b === 0) {
+                                    // allNetFunctions.fields2D[i][j].material.color.r =0
+                                    // allNetFunctions.fields2D[i][j].material.color.g =0
+                                    // allNetFunctions.fields2D[i][j].material.color.b =0
+                                    allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
+                                }
+                            }
+                        }
+
                         const pawnId = this.selectedPawn.pawnId;
                         const newPosition = { ...this.selectedPawn.position };
 
