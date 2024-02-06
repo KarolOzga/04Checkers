@@ -18,10 +18,14 @@ export default class Raycaster {
         if (intersects.length > 0) {
             const intersectedObject = intersects[0].object;
             if (intersectedObject.isPawn && intersectedObject.owner === this.currentUser) {
-                this.clearGreenFields();
+                this.clearGreenFields(); ///TUTAJ JEST PROBLEM
+
                 if (this.selectedPawn) {
                     this.selectedPawn.material = this.selectedPawn.originalMaterial;
+                } else {
+                    console.error('selectedPawn is null');
                 }
+
                 const selectedMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
 
                 let acceptableField = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
@@ -118,10 +122,6 @@ export default class Raycaster {
             withoutABSX = -withoutABSX;
             withoutABSZ = -withoutABSZ;
         }
-
-        if (withoutABSX < 0) {
-        }
-
         allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = true;
 
         if (withoutABSX >= 0) {
@@ -141,15 +141,17 @@ export default class Raycaster {
                     new TWEEN.Tween(this.selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
                         this.selectedPawn.material = this.selectedPawn.originalMaterial;
 
-                        this.clearGreenFields();
-
                         const pawnId = this.selectedPawn.pawnId;
                         const newPosition = { ...this.selectedPawn.position };
 
                         allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = false;
 
                         this.selectedPawn = null;
+
+                        // this.clearGreenFields();
+
                         client.emit('pawnMoved', { pawnId, newPosition });
+
                         allNetFunctions.setPlayerMove(pawnId);
                         allNetFunctions.getPlayerMove();
                     })
@@ -173,9 +175,11 @@ export default class Raycaster {
     clearGreenFields() {
         for (let i = 0; i < allNetFunctions.fields2D.length; i++) {
             for (let j = 0; j < allNetFunctions.fields2D[i].length; j++) {
-                let color = allNetFunctions.fields2D[i][j].material.color;
-                if (color.r === 0 && color.g === 1 && color.b === 0) {
-                    allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
+                if (allNetFunctions.fields2D[i][j].material) {
+                    let color = allNetFunctions.fields2D[i][j].material.color;
+                    if (color.r === 0 && color.g === 1 && color.b === 0) {
+                        allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
+                    }
                 }
             }
         }
