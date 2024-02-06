@@ -18,6 +18,7 @@ export default class Raycaster {
         if (intersects.length > 0) {
             const intersectedObject = intersects[0].object;
             if (intersectedObject.isPawn && intersectedObject.owner === this.currentUser) {
+                this.clearGreenFields();
                 if (this.selectedPawn) {
                     this.selectedPawn.material = this.selectedPawn.originalMaterial;
                 }
@@ -25,12 +26,6 @@ export default class Raycaster {
 
                 console.log(allNetFunctions.fields2D, 'FIELDS');
                 console.log(intersectedObject.position, 'POSITION OF SELECTED PAWN');
-
-                // console.log("{DEBUG, CHECKING FIELDS POSITIONS}")
-                // console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1]);
-                // console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1]);
-                // console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1]);
-                // console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1]);
 
                 let acceptableField = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
 
@@ -113,19 +108,7 @@ export default class Raycaster {
                     new TWEEN.Tween(this.selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
                         this.selectedPawn.material = this.selectedPawn.originalMaterial;
 
-                        console.log(allNetFunctions.fields2D);
-
-                        for (let i = 0; i < 8; i++) {
-                            for (let j = 0; j < 8; j++) {
-                                let color = allNetFunctions.fields2D[i][j].material.color;
-                                if (color.r === 0 && color.g === 1 && color.b === 0) {
-                                    // allNetFunctions.fields2D[i][j].material.color.r =0
-                                    // allNetFunctions.fields2D[i][j].material.color.g =0
-                                    // allNetFunctions.fields2D[i][j].material.color.b =0
-                                    allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
-                                }
-                            }
-                        }
+                        this.clearGreenFields();
 
                         const pawnId = this.selectedPawn.pawnId;
                         const newPosition = { ...this.selectedPawn.position };
@@ -141,6 +124,17 @@ export default class Raycaster {
                 .start();
         } else {
             console.log('Invalid move. Pawns can only move one field at a time.');
+        }
+    }
+
+    clearGreenFields() {
+        for (let i = 0; i < allNetFunctions.fields2D.length; i++) {
+            for (let j = 0; j < allNetFunctions.fields2D[i].length; j++) {
+                let color = allNetFunctions.fields2D[i][j].material.color;
+                if (color.r === 0 && color.g === 1 && color.b === 0) {
+                    allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
+                }
+            }
         }
     }
 }
