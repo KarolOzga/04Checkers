@@ -34,24 +34,48 @@ export default class Raycaster {
 
                 let acceptableField = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
 
-                if (allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree) {
-                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].originalMaterial =
-                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].material;
+                if (
+                    intersectedObject.position.x + 1 < allNetFunctions.fields2D.length &&
+                    intersectedObject.position.z - 1 >= 0 &&
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree
+                ) {
+                    if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].originalMaterial) {
+                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].originalMaterial =
+                            allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].material;
+                    }
                     allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].material = acceptableField;
                 }
-                if (allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree) {
-                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].originalMaterial =
-                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].material;
+                if (
+                    intersectedObject.position.x + 1 < allNetFunctions.fields2D.length &&
+                    intersectedObject.position.z + 1 < allNetFunctions.fields2D[0].length &&
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree
+                ) {
+                    if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].originalMaterial) {
+                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].originalMaterial =
+                            allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].material;
+                    }
                     allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].material = acceptableField;
                 }
-                if (allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree) {
-                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].originalMaterial =
-                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].material;
+                if (
+                    intersectedObject.position.x - 1 >= 0 &&
+                    intersectedObject.position.z - 1 >= 0 &&
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree
+                ) {
+                    if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].originalMaterial) {
+                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].originalMaterial =
+                            allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].material;
+                    }
                     allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].material = acceptableField;
                 }
-                if (allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree) {
-                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].originalMaterial =
-                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].material;
+                if (
+                    intersectedObject.position.x - 1 >= 0 &&
+                    intersectedObject.position.z + 1 < allNetFunctions.fields2D[0].length &&
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree
+                ) {
+                    if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].originalMaterial) {
+                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].originalMaterial =
+                            allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].material;
+                    }
                     allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].material = acceptableField;
                 }
 
