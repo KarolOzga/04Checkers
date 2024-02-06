@@ -218,3 +218,4 @@ export { GameObject };
 export { camera };
 export { client };
 export { scene };
+export { pionki };

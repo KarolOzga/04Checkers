@@ -6,6 +6,7 @@ import { setCorrectUserPawnColor } from './Main.js';
 
 import { client } from './Main.js';
 import { scene } from './Main.js';
+import { pionki } from './Main.js';
 
 const allNetFunctions = {
     isUserOneLogged: false,
@@ -124,6 +125,14 @@ const allNetFunctions = {
 
                         console.log(this.fields, 'this.fields');
                         console.log(this.fields2D, 'fields2D');
+
+                        for (let i = 0; i < pionki.length; i++) {
+                            for (let j = 0; j < pionki[i].length; j++) {
+                                if (pionki[i][j] === 1 || pionki[i][j] === 2) {
+                                    this.fields2D[i][j].isFree = false;
+                                }
+                            }
+                        }
                         // client.emit('timeUp');
                         // allEvents.waitForSecondPlayerMove('pink');
                     }
