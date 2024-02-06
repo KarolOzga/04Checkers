@@ -25,7 +25,6 @@ const allNetFunctions = {
             body: JSON.stringify({ userName: userName }),
         })
             .then((response) => {
-                console.log(response.status);
                 if (response.status === 403) {
                     allEvents.reject();
                     throw new Error('Oba miejsca zajęte, zresetuj grę by zwolnić miejsca.');
@@ -41,7 +40,6 @@ const allNetFunctions = {
                 this.loginData = data;
                 this.whichPlayer(userNameAsParametr);
                 GameObject.setPlayer(data);
-                console.log(data);
                 if (data.user === 1) {
                     allNetFunctions.isUserOneLogged = true;
                     setCorrectUserPawnColor();
@@ -75,7 +73,6 @@ const allNetFunctions = {
             })
                 .then((response) => response.json())
                 .then((data) => {
-                    console.log(data.users);
                     if (data.player === 1) {
                         this.isUserOneLogged = true;
                         this.isUserTwoLogged = false;
@@ -103,7 +100,6 @@ const allNetFunctions = {
                         client.emit('secondUserConnected');
 
                         client.on('secondUserConnected', (data) => {
-                            console.log('ELO ELO 3 2 0, client :3');
                             allEvents.waitForSecondPlayerMove('pink');
                         });
                         allEvents.cancelLoading();
@@ -123,9 +119,6 @@ const allNetFunctions = {
                             }
                         }
 
-                        console.log(this.fields, 'this.fields');
-                        console.log(this.fields2D, 'fields2D');
-
                         for (let i = 0; i < pionki.length; i++) {
                             for (let j = 0; j < pionki[i].length; j++) {
                                 if (pionki[i][j] === 1 || pionki[i][j] === 2) {
@@ -136,7 +129,6 @@ const allNetFunctions = {
                         // client.emit('timeUp');
                         // allEvents.waitForSecondPlayerMove('pink');
                     }
-                    console.log(data.player);
                 });
         }, 1000);
     },
@@ -161,7 +153,6 @@ const allNetFunctions = {
 
                 allEvents.isUserLogged = false;
                 camera.setCameraPosition(3.65, 5, 12);
-                console.log(data.message);
             })
             .catch((error) => console.log(error));
     },
@@ -175,9 +166,7 @@ const allNetFunctions = {
             body: JSON.stringify({ setPlayerMove: player }),
         })
             .then((response) => response.json())
-            .then((data) => {
-                console.log('Success:', data);
-            })
+            .then((data) => {})
             .catch((error) => {
                 console.error('Error:', error);
             });
@@ -191,7 +180,6 @@ const allNetFunctions = {
         })
             .then((response) => response.json())
             .then((data) => {
-                console.log(data, 'data');
                 let whoseMove = data.player;
                 allEvents.waitForSecondPlayerMove(whoseMove);
             });

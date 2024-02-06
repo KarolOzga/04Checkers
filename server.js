@@ -10,7 +10,7 @@ const server = http.createServer(app); // tu zmiana
 const { Server } = require('socket.io');
 const socketio = new Server(server, {
     cors: {
-        origin: 'http://192.168.0.171:3000',
+        origin: ['http://192.168.0.171:3000', 'http://192.168.0.171:5173'],
         methods: ['GET', 'POST'],
     },
 });
@@ -34,21 +34,16 @@ let client1 = null;
 let client2 = null;
 
 socketio.on('connection', (client) => {
-    console.log('klient się podłączył z id = ', client.id);
     if (client1 === null) {
         client1 = client.id;
     } else {
         client2 = client.id;
     }
 
-    console.log('client1', client1);
-    console.log('client2', client2);
-
     client.emit('onconnect', {
         clientId: client.id,
     });
     client.on('disconnect', (reason) => {
-        console.log('klient się rozłącza', reason);
         if (client.id === client1) {
             client1 = null;
         } else if (client.id === client2) {
@@ -67,7 +62,6 @@ socketio.on('connection', (client) => {
     });
 
     client.on('secondUserConnected', (data) => {
-        console.log('ELO ELO 3 2 0, server');
         if (client2) {
             socketio.to(client2).emit('secondUserConnected', data);
         }
@@ -75,7 +69,7 @@ socketio.on('connection', (client) => {
 });
 
 // socketio.on('secondUserConnected', (data) => {
-//     console.log('ELO ELO 3 2 0, server');
+//  ;
 // });
 
 let activeUsers = [];
@@ -104,7 +98,6 @@ app.post('/whichPlayer', (req, res) => {
 });
 
 app.post('/setPlayerMove', (req, res) => {
-    console.log(req.body);
     if (req.body.setPlayerMove <= 8) {
         setPlayerMove = 'gray';
     } else if (req.body.setPlayerMove > 8) {
@@ -117,6 +110,4 @@ app.get('/whichUserTurn', (req, res) => {
     res.json({ player: setPlayerMove });
 });
 
-server.listen(PORT, '0.0.0.0', function () {
-    console.log('start serwera na porcie ' + PORT);
-});
+server.listen(PORT, '0.0.0.0', function () {});

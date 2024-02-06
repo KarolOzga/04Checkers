@@ -49,9 +49,7 @@ const GameObject = {
         } else if (this.player2 === null && this.player1 !== null) {
             this.player2 = player;
         } else {
-            console.log('Oba miejsca zajęte, zresetuj grę by zwolnić miejsca');
         }
-        console.log(this.player1, this.player2);
     },
 };
 const light = new THREE.AmbientLight(0xffffff, 1);
@@ -185,7 +183,11 @@ client.on('timeUp', () => {
 client.on('pawnMoved', (data) => {
     const pawn = scene.children.find((child) => child.isPawn && child.pawnId === data.pawnId);
 
-    const oldPosition = { x: pawn.position.x, z: pawn.position.z };
+    let oldPosition = {};
+
+    if (pawn) {
+        oldPosition = { x: pawn.position.x, z: pawn.position.z };
+    }
 
     if (!pawn) {
         return;

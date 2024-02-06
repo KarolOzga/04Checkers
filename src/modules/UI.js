@@ -8,9 +8,6 @@ const allEvents = {
         let input = document.getElementById('loginBt');
         let nickname = document.getElementById('nicknameInput');
         input.onclick = function () {
-            console.log(nickname);
-            console.log(nickname.value);
-
             userName = nickname.value;
             allNetFunctions.loginUser(userName);
 
@@ -18,7 +15,6 @@ const allEvents = {
         };
 
         document.getElementById('resetBt').onclick = function () {
-            console.log('resetBt');
             nickname.disabled = false;
             nickname.value = '';
             allNetFunctions.resetUsers();
