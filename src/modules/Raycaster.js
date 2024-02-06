@@ -29,10 +29,14 @@ export default class Raycaster {
 
                 let acceptableField = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
 
+                console.log(intersectedObject.pawnId, 'PAWN ID');
+                console.log(intersectedObject.owner, 'PAWN OWNER');
+
                 if (
                     intersectedObject.position.x + 1 < allNetFunctions.fields2D.length &&
                     intersectedObject.position.z - 1 >= 0 &&
-                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree &&
+                    intersectedObject.owner === 'pink'
                 ) {
                     if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].originalMaterial) {
                         allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].originalMaterial =
@@ -43,7 +47,8 @@ export default class Raycaster {
                 if (
                     intersectedObject.position.x + 1 < allNetFunctions.fields2D.length &&
                     intersectedObject.position.z + 1 < allNetFunctions.fields2D[0].length &&
-                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree &&
+                    intersectedObject.owner === 'pink'
                 ) {
                     if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].originalMaterial) {
                         allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].originalMaterial =
@@ -54,7 +59,8 @@ export default class Raycaster {
                 if (
                     intersectedObject.position.x - 1 >= 0 &&
                     intersectedObject.position.z - 1 >= 0 &&
-                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree &&
+                    intersectedObject.owner === 'gray'
                 ) {
                     if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].originalMaterial) {
                         allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].originalMaterial =
@@ -65,7 +71,8 @@ export default class Raycaster {
                 if (
                     intersectedObject.position.x - 1 >= 0 &&
                     intersectedObject.position.z + 1 < allNetFunctions.fields2D[0].length &&
-                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree &&
+                    intersectedObject.owner === 'gray'
                 ) {
                     if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].originalMaterial) {
                         allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].originalMaterial =
@@ -89,9 +96,26 @@ export default class Raycaster {
         const dx = Math.abs(this.selectedPawn.position.x - intersectedObject.position.x);
         const dz = Math.abs(this.selectedPawn.position.z - intersectedObject.position.z);
 
+        let withoutABSX = this.selectedPawn.position.x - intersectedObject.position.x;
+        let withoutABSZ = this.selectedPawn.position.z - intersectedObject.position.z;
+
+        console.log(this.currentUser, 'CURRENT USER');
+
+        if (this.currentUser === 'pink') {
+            withoutABSX = -withoutABSX;
+            withoutABSZ = -withoutABSZ;
+        }
+
+        console.log('withoutABSX', withoutABSX);
+        console.log('withoutABSZ', withoutABSZ);
+
+        if (withoutABSX < 0) {
+            console.log('DOIGRALES SIE SKURYWSYNU NIE MOZNA DO TYLu');
+        }
+
         allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = true;
 
-        if (dx <= 1 && dz <= 1) {
+        if (withoutABSX > 0) {
             new TWEEN.Tween(this.selectedPawn.position)
                 .to(
                     {
@@ -123,7 +147,7 @@ export default class Raycaster {
                 )
                 .start();
         } else {
-            console.log('Invalid move. Pawns can only move one field at a time.');
+            console.log('Invalid move.');
         }
     }
 
