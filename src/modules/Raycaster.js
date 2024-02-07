@@ -175,11 +175,20 @@ export default class Raycaster {
     clearGreenFields() {
         for (let i = 0; i < allNetFunctions.fields2D.length; i++) {
             for (let j = 0; j < allNetFunctions.fields2D[i].length; j++) {
-                if (allNetFunctions.fields2D[i][j].material) {
+                // console.log(allNetFunctions.fields2D[i][j].material);
+
+                if (allNetFunctions.fields2D[i][j].originalMaterial) {
                     let color = allNetFunctions.fields2D[i][j].material.color;
-                    if (color.r === 0 && color.g === 1 && color.b === 0) {
+                    if (color.r == 0 && color.g == 1 && color.b == 0) {
+                        console.log('[DEBUG]', allNetFunctions.fields2D[i][j].material);
+                        console.log('[DEBUG]', allNetFunctions.fields2D[i][j].originalMaterial);
                         allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
                     }
+
+                    // let color = allNetFunctions.fields2D[i][j].material.color;
+                    // if (color.r === 0 && color.g === 1 && color.b === 0) {
+                    //     allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
+                    // }
                 }
             }
         }
