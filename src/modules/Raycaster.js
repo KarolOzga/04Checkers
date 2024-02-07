@@ -18,12 +18,10 @@ export default class Raycaster {
         if (intersects.length > 0) {
             const intersectedObject = intersects[0].object;
             if (intersectedObject.isPawn && intersectedObject.owner === this.currentUser) {
-                this.clearGreenFields(); ///TUTAJ JEST PROBLEM
+                this.clearGreenFields();
 
                 if (this.selectedPawn) {
                     this.selectedPawn.material = this.selectedPawn.originalMaterial;
-                } else {
-                    console.error('selectedPawn is null');
                 }
 
                 const selectedMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000 });
@@ -90,6 +88,12 @@ export default class Raycaster {
                     ) {
                         allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].material = acceptableField;
                     }
+                    if (
+                        !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree &&
+                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].isFree
+                    ) {
+                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].material = acceptableField;
+                    }
                 }
 
                 if (intersectedObject.owner === 'gray') {
@@ -98,6 +102,12 @@ export default class Raycaster {
                         allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].isFree
                     ) {
                         allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].material = acceptableField;
+                    }
+                    if (
+                        !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree &&
+                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].isFree
+                    ) {
+                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].material = acceptableField;
                     }
                 }
 
@@ -148,7 +158,7 @@ export default class Raycaster {
 
                         this.selectedPawn = null;
 
-                        // this.clearGreenFields();
+                        this.clearGreenFields();
 
                         client.emit('pawnMoved', { pawnId, newPosition });
 
@@ -160,16 +170,18 @@ export default class Raycaster {
         } else {
         }
 
-        // if (dx === 2 && dz === 2) {
-        //     const opponentPawnX = (this.selectedPawn.position.x + intersectedObject.position.x) / 2;
-        //     const opponentPawnZ = (this.selectedPawn.position.z + intersectedObject.position.z) / 2;
-        //     const opponentPawn = allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn;
-        //     if (opponentPawn && opponentPawn.owner !== this.currentUser) {
-        //         this.scene.remove(opponentPawn);
-        //         allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].isFree = true;
-        //         allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn = null;
-        //     }
-        // }
+        if (dx === 2 && dz === 2) {
+            this.clearGreenFields();
+            console.log('BICIE');
+            const opponentPawnX = (this.selectedPawn.position.x + intersectedObject.position.x) / 2;
+            const opponentPawnZ = (this.selectedPawn.position.z + intersectedObject.position.z) / 2;
+            const opponentPawn = allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn;
+            if (opponentPawn && opponentPawn.owner !== this.currentUser) {
+                this.scene.remove(opponentPawn);
+                allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].isFree = true;
+                allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn = null;
+            }
+        }
     }
 
     clearGreenFields() {
