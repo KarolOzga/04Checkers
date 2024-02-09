@@ -221,3 +221,4 @@ export { camera };
 export { client };
 export { scene };
 export { pionki };
+export { uniquePawnList };

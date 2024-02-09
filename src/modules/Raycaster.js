@@ -3,6 +3,7 @@ import { allNetFunctions } from './Net';
 import { client } from './Main';
 import TWEEN from '@tweenjs/tween.js';
 import black_board_texture from '../img/textures/black_board_texture.png';
+import { uniquePawnList } from './Main';
 
 export default class Raycaster {
     constructor(threeCamera, scene, currentUser) {
@@ -16,7 +17,7 @@ export default class Raycaster {
         this.black_texture = this.textureLoader.load(black_board_texture);
         this.black_material = new THREE.MeshBasicMaterial({ map: this.black_texture });
 
-        console.log(this.black_material, 'this.black_material');
+        this.killedPawn = null;
     }
 
     performRaycast(mouse) {
@@ -190,22 +191,25 @@ export default class Raycaster {
                 )
                 .start();
         } else if (intersectedObject.isFree && intersectedObject.isBlack && intersectedObject.isField) {
-            console.log(allNetFunctions.fields2D[intersectedObject.position.x][intersectedObject.position.z], '[DEBUG]');
-
-            console.log('OWNER', this.selectedPawn.owner);
-
             if (this.selectedPawn.owner === 'pink' && allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree) {
                     if (dx === 2 && dz === 2) {
-                        console.log('ruch różowego pionka ');
-                        this.animateMove(intersectedObject);
+                        for (let i = 0; i < uniquePawnList.length; i++) {
+                            if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                                this.killedPawn = uniquePawnList[i];
+                            }
+                        }
+
+                        if (this.killedPawn.owner === 'gray') {
+                            this.animateMove(intersectedObject);
+                        }
                     }
                 }
             }
             if (this.selectedPawn.owner === 'pink' && allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree) {
                     if (dx === 2 && dz === 2) {
-                        console.log('ruch różowego pionka ');
+                        console.log(uniquePawnList, 'BICIE');
                         this.animateMove(intersectedObject);
                     }
                 }
@@ -214,7 +218,7 @@ export default class Raycaster {
             if (this.selectedPawn.owner === 'gray' && allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree) {
                     if (dx === 2 && dz === 2) {
-                        console.log('ruch szarego pionka ');
+                        console.log(uniquePawnList, 'BICIE');
                         this.animateMove(intersectedObject);
                     }
                 }
@@ -222,7 +226,7 @@ export default class Raycaster {
             if (this.selectedPawn.owner === 'gray' && allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree) {
                     if (dx === 2 && dz === 2) {
-                        console.log('ruch szarego pionka ');
+                        console.log(uniquePawnList, 'BICIE');
                         this.animateMove(intersectedObject);
                     }
                 }
@@ -250,15 +254,11 @@ export default class Raycaster {
     clearGreenFields() {
         for (let i = 0; i < allNetFunctions.fields2D.length; i++) {
             for (let j = 0; j < allNetFunctions.fields2D[i].length; j++) {
-                // console.log(allNetFunctions.fields2D[i][j].material);
-
-                // if (allNetFunctions.fields2D[i][j].originalMaterial) {
                 let color = allNetFunctions.fields2D[i][j].material.color;
                 if (color.r == 0 && color.g == 1 && color.b == 0) {
                     allNetFunctions.fields2D[i][j].material = this.black_material;
                 }
             }
-            // }
         }
     }
     animateMove(intersectedObject) {
