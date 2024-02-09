@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { allNetFunctions } from './Net';
 import { client } from './Main';
 import TWEEN from '@tweenjs/tween.js';
+import black_board_texture from '../img/textures/black_board_texture.png';
 
 export default class Raycaster {
     constructor(threeCamera, scene, currentUser) {
@@ -10,6 +11,12 @@ export default class Raycaster {
         this.scene = scene;
         this.currentUser = currentUser;
         this.selectedPawn = null;
+
+        this.textureLoader = new THREE.TextureLoader();
+        this.black_texture = this.textureLoader.load(black_board_texture);
+        this.black_material = new THREE.MeshBasicMaterial({ map: this.black_texture });
+
+        console.log(this.black_material, 'this.black_material');
     }
 
     performRaycast(mouse) {
@@ -248,7 +255,7 @@ export default class Raycaster {
                 if (allNetFunctions.fields2D[i][j].originalMaterial) {
                     let color = allNetFunctions.fields2D[i][j].material.color;
                     if (color.r == 0 && color.g == 1 && color.b == 0) {
-                        allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
+                        allNetFunctions.fields2D[i][j].material = this.black_material;
                     }
                 }
             }
