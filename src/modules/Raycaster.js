@@ -178,120 +178,30 @@ export default class Raycaster {
                 )
                 .start();
         } else if (intersectedObject.isFree && intersectedObject.isBlack && intersectedObject.isField) {
-            if (
-                this.selectedPawn.owner === 'pink' &&
-                (allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] != undefined ||
-                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] != undefined)
-            ) {
-                if (
-                    !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree ||
-                    !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree
-                ) {
+            if (this.selectedPawn.owner === 'pink' && allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] != undefined) {
+                if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree) {
                     if (dx === 2 && dz === 2) {
-                        console.log(intersectedObject.position.x, intersectedObject.position.z, intersectedObject.isFree, 'BICIE');
-                        this.clearGreenFields();
-                        console.log('BICIE');
-                        const opponentPawnX = (this.selectedPawn.position.x + intersectedObject.position.x) / 2;
-                        const opponentPawnZ = (this.selectedPawn.position.z + intersectedObject.position.z) / 2;
-                        const opponentPawn = allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn;
-                        if (opponentPawn && opponentPawn.owner !== this.currentUser) {
-                            this.scene.remove(opponentPawn);
-                            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].isFree = true;
-                            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn = null;
-                        }
-
-                        new TWEEN.Tween(this.selectedPawn.position)
-                            .to(
-                                {
-                                    x: intersectedObject.position.x,
-                                    z: intersectedObject.position.z,
-                                },
-                                500
-                            )
-                            .start();
-
-                        new TWEEN.Tween(this.selectedPawn.position)
-                            .to({ y: 1 }, 250)
-                            .chain(
-                                new TWEEN.Tween(this.selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
-                                    this.selectedPawn.material = this.selectedPawn.originalMaterial;
-
-                                    const pawnId = this.selectedPawn.pawnId;
-                                    const newPosition = { ...this.selectedPawn.position };
-
-                                    allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = false;
-
-                                    this.selectedPawn = null;
-
-                                    this.clearGreenFields();
-
-                                    console.log(newPosition, 'newPosition');
-
-                                    client.emit('pawnMoved', { pawnId, newPosition });
-
-                                    allNetFunctions.setPlayerMove(pawnId);
-                                    allNetFunctions.getPlayerMove();
-                                })
-                            )
-                            .start();
+                        this.animateMove(intersectedObject);
                     }
                 }
-            } else if (
-                this.selectedPawn.owner === 'gray' &&
-                (allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] != undefined ||
-                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] != undefined)
-            ) {
-                if (
-                    !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree ||
-                    !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree
-                ) {
+            } else if (this.selectedPawn.owner === 'pink' && allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] != undefined) {
+                if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree) {
                     if (dx === 2 && dz === 2) {
-                        console.log(intersectedObject.position.x, intersectedObject.position.z, intersectedObject.isFree, 'BICIE');
-                        this.clearGreenFields();
-                        console.log('BICIE');
-                        const opponentPawnX = (this.selectedPawn.position.x + intersectedObject.position.x) / 2;
-                        const opponentPawnZ = (this.selectedPawn.position.z + intersectedObject.position.z) / 2;
-                        const opponentPawn = allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn;
-                        if (opponentPawn && opponentPawn.owner !== this.currentUser) {
-                            this.scene.remove(opponentPawn);
-                            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].isFree = true;
-                            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn = null;
-                        }
+                        this.animateMove(intersectedObject);
+                    }
+                }
+            }
 
-                        new TWEEN.Tween(this.selectedPawn.position)
-                            .to(
-                                {
-                                    x: intersectedObject.position.x,
-                                    z: intersectedObject.position.z,
-                                },
-                                500
-                            )
-                            .start();
-
-                        new TWEEN.Tween(this.selectedPawn.position)
-                            .to({ y: 1 }, 250)
-                            .chain(
-                                new TWEEN.Tween(this.selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
-                                    this.selectedPawn.material = this.selectedPawn.originalMaterial;
-
-                                    const pawnId = this.selectedPawn.pawnId;
-                                    const newPosition = { ...this.selectedPawn.position };
-
-                                    allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = false;
-
-                                    this.selectedPawn = null;
-
-                                    this.clearGreenFields();
-
-                                    console.log(newPosition, 'newPosition');
-
-                                    client.emit('pawnMoved', { pawnId, newPosition });
-
-                                    allNetFunctions.setPlayerMove(pawnId);
-                                    allNetFunctions.getPlayerMove();
-                                })
-                            )
-                            .start();
+            if (this.selectedPawn.owner === 'gray' && allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] != undefined) {
+                if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree) {
+                    if (dx === 2 && dz === 2) {
+                        this.animateMove(intersectedObject);
+                    }
+                }
+            } else if (this.selectedPawn.owner === 'gray' && allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] != undefined) {
+                if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree) {
+                    if (dx === 2 && dz === 2) {
+                        this.animateMove(intersectedObject);
                     }
                 }
             }
@@ -323,18 +233,55 @@ export default class Raycaster {
                 if (allNetFunctions.fields2D[i][j].originalMaterial) {
                     let color = allNetFunctions.fields2D[i][j].material.color;
                     if (color.r == 0 && color.g == 1 && color.b == 0) {
-                        console.log('[DEBUG]', allNetFunctions.fields2D[i][j].material);
-                        console.log('[DEBUG]', allNetFunctions.fields2D[i][j].originalMaterial);
                         allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
                     }
-
-                    // let color = allNetFunctions.fields2D[i][j].material.color;
-                    // if (color.r === 0 && color.g === 1 && color.b === 0) {
-                    //     allNetFunctions.fields2D[i][j].material = allNetFunctions.fields2D[i][j].originalMaterial;
-                    // }
                 }
             }
         }
     }
-    animateMove() {}
+    animateMove(intersectedObject) {
+        this.clearGreenFields();
+        console.log('BICIE');
+        const opponentPawnX = (this.selectedPawn.position.x + intersectedObject.position.x) / 2;
+        const opponentPawnZ = (this.selectedPawn.position.z + intersectedObject.position.z) / 2;
+        const opponentPawn = allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn;
+        if (opponentPawn && opponentPawn.owner !== this.currentUser) {
+            this.scene.remove(opponentPawn);
+            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].isFree = true;
+            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn = null;
+        }
+
+        new TWEEN.Tween(this.selectedPawn.position)
+            .to(
+                {
+                    x: intersectedObject.position.x,
+                    z: intersectedObject.position.z,
+                },
+                500
+            )
+            .start();
+
+        new TWEEN.Tween(this.selectedPawn.position)
+            .to({ y: 1 }, 250)
+            .chain(
+                new TWEEN.Tween(this.selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
+                    this.selectedPawn.material = this.selectedPawn.originalMaterial;
+
+                    const pawnId = this.selectedPawn.pawnId;
+                    const newPosition = { ...this.selectedPawn.position };
+
+                    allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = false;
+
+                    this.selectedPawn = null;
+
+                    this.clearGreenFields();
+
+                    client.emit('pawnMoved', { pawnId, newPosition });
+
+                    allNetFunctions.setPlayerMove(pawnId);
+                    allNetFunctions.getPlayerMove();
+                })
+            )
+            .start();
+    }
 }
