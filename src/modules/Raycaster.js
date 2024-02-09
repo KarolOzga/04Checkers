@@ -82,13 +82,17 @@ export default class Raycaster {
                 }
 
                 if (intersectedObject.owner === 'pink') {
+                    console.log(!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree);
+
                     if (
+                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] &&
                         !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree &&
                         allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].isFree
                     ) {
                         allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].material = acceptableField;
                     }
                     if (
+                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree &&
                         !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree &&
                         allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].isFree
                     ) {
@@ -98,12 +102,14 @@ export default class Raycaster {
 
                 if (intersectedObject.owner === 'gray') {
                     if (
+                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] &&
                         !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree &&
                         allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].isFree
                     ) {
                         allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].material = acceptableField;
                     }
                     if (
+                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] &&
                         !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree &&
                         allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].isFree
                     ) {
@@ -134,7 +140,9 @@ export default class Raycaster {
         }
         allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = true;
 
-        if (withoutABSX >= 0) {
+        console.log(withoutABSX, withoutABSZ, 'withoutABSX', 'withoutABSZ');
+
+        if (withoutABSX > 0 && withoutABSX <= 1) {
             new TWEEN.Tween(this.selectedPawn.position)
                 .to(
                     {
@@ -160,6 +168,8 @@ export default class Raycaster {
 
                         this.clearGreenFields();
 
+                        console.log(newPosition, 'newPosition');
+
                         client.emit('pawnMoved', { pawnId, newPosition });
 
                         allNetFunctions.setPlayerMove(pawnId);
@@ -167,19 +177,140 @@ export default class Raycaster {
                     })
                 )
                 .start();
-        } else {
-        }
+        } else if (intersectedObject.isFree && intersectedObject.isBlack && intersectedObject.isField) {
+            if (
+                this.selectedPawn.owner === 'pink' &&
+                (allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] != undefined ||
+                    allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] != undefined)
+            ) {
+                if (
+                    !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree ||
+                    !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree
+                ) {
+                    if (dx === 2 && dz === 2) {
+                        console.log(intersectedObject.position.x, intersectedObject.position.z, intersectedObject.isFree, 'BICIE');
+                        this.clearGreenFields();
+                        console.log('BICIE');
+                        const opponentPawnX = (this.selectedPawn.position.x + intersectedObject.position.x) / 2;
+                        const opponentPawnZ = (this.selectedPawn.position.z + intersectedObject.position.z) / 2;
+                        const opponentPawn = allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn;
+                        if (opponentPawn && opponentPawn.owner !== this.currentUser) {
+                            this.scene.remove(opponentPawn);
+                            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].isFree = true;
+                            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn = null;
+                        }
 
-        if (dx === 2 && dz === 2) {
-            this.clearGreenFields();
-            console.log('BICIE');
-            const opponentPawnX = (this.selectedPawn.position.x + intersectedObject.position.x) / 2;
-            const opponentPawnZ = (this.selectedPawn.position.z + intersectedObject.position.z) / 2;
-            const opponentPawn = allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn;
-            if (opponentPawn && opponentPawn.owner !== this.currentUser) {
-                this.scene.remove(opponentPawn);
-                allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].isFree = true;
-                allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn = null;
+                        new TWEEN.Tween(this.selectedPawn.position)
+                            .to(
+                                {
+                                    x: intersectedObject.position.x,
+                                    z: intersectedObject.position.z,
+                                },
+                                500
+                            )
+                            .start();
+
+                        new TWEEN.Tween(this.selectedPawn.position)
+                            .to({ y: 1 }, 250)
+                            .chain(
+                                new TWEEN.Tween(this.selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
+                                    this.selectedPawn.material = this.selectedPawn.originalMaterial;
+
+                                    const pawnId = this.selectedPawn.pawnId;
+                                    const newPosition = { ...this.selectedPawn.position };
+
+                                    allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = false;
+
+                                    this.selectedPawn = null;
+
+                                    this.clearGreenFields();
+
+                                    console.log(newPosition, 'newPosition');
+
+                                    client.emit('pawnMoved', { pawnId, newPosition });
+
+                                    allNetFunctions.setPlayerMove(pawnId);
+                                    allNetFunctions.getPlayerMove();
+                                })
+                            )
+                            .start();
+                    }
+                }
+            } else if (
+                this.selectedPawn.owner === 'gray' &&
+                (allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] != undefined ||
+                    allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] != undefined)
+            ) {
+                if (
+                    !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree ||
+                    !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree
+                ) {
+                    if (dx === 2 && dz === 2) {
+                        console.log(intersectedObject.position.x, intersectedObject.position.z, intersectedObject.isFree, 'BICIE');
+                        this.clearGreenFields();
+                        console.log('BICIE');
+                        const opponentPawnX = (this.selectedPawn.position.x + intersectedObject.position.x) / 2;
+                        const opponentPawnZ = (this.selectedPawn.position.z + intersectedObject.position.z) / 2;
+                        const opponentPawn = allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn;
+                        if (opponentPawn && opponentPawn.owner !== this.currentUser) {
+                            this.scene.remove(opponentPawn);
+                            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].isFree = true;
+                            allNetFunctions.fields2D[opponentPawnX][opponentPawnZ].pawn = null;
+                        }
+
+                        new TWEEN.Tween(this.selectedPawn.position)
+                            .to(
+                                {
+                                    x: intersectedObject.position.x,
+                                    z: intersectedObject.position.z,
+                                },
+                                500
+                            )
+                            .start();
+
+                        new TWEEN.Tween(this.selectedPawn.position)
+                            .to({ y: 1 }, 250)
+                            .chain(
+                                new TWEEN.Tween(this.selectedPawn.position).to({ y: 0.35 }, 250).onComplete(() => {
+                                    this.selectedPawn.material = this.selectedPawn.originalMaterial;
+
+                                    const pawnId = this.selectedPawn.pawnId;
+                                    const newPosition = { ...this.selectedPawn.position };
+
+                                    allNetFunctions.fields2D[this.selectedPawn.position.x][this.selectedPawn.position.z].isFree = false;
+
+                                    this.selectedPawn = null;
+
+                                    this.clearGreenFields();
+
+                                    console.log(newPosition, 'newPosition');
+
+                                    client.emit('pawnMoved', { pawnId, newPosition });
+
+                                    allNetFunctions.setPlayerMove(pawnId);
+                                    allNetFunctions.getPlayerMove();
+                                })
+                            )
+                            .start();
+                    }
+                }
+            }
+        } else {
+            console.log('Nie można wykonać ruchu');
+            console.log(intersectedObject.isFree);
+            console.log(intersectedObject.isBlack);
+            console.log(intersectedObject.isField);
+            if (this.selectedPawn.owner === 'pink') {
+                console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1]);
+                console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1]);
+                console.log(!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree);
+                console.log(!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree);
+            }
+            if (this.selectedPawn.owner === 'gray') {
+                console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1]);
+                console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1]);
+                console.log(!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree);
+                console.log(!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree);
             }
         }
     }
@@ -205,4 +336,5 @@ export default class Raycaster {
             }
         }
     }
+    animateMove() {}
 }
