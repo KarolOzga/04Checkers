@@ -98,7 +98,15 @@ export default class Raycaster {
                         !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree &&
                         allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].isFree
                     ) {
-                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].material = acceptableField;
+                        for (let i = 0; i < uniquePawnList.length; i++) {
+                            if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
+                                let killedPawn = uniquePawnList[i];
+                                console.log(killedPawn.owner, 'killedPawn OWNER [DEBUGGGGGGG]');
+                                if (killedPawn && killedPawn.owner === 'gray') {
+                                    allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].material = acceptableField;
+                                }
+                            }
+                        }
                     }
                     if (
                         allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] &&
@@ -106,7 +114,16 @@ export default class Raycaster {
                         !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree &&
                         allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].isFree
                     ) {
-                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].material = acceptableField;
+                        for (let i = 0; i < uniquePawnList.length; i++) {
+                            if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                                let killedPawn = uniquePawnList[i];
+                                console.log(killedPawn.owner, 'killedPawn OWNER [DEBUGGGGGGG]');
+                                if (killedPawn && killedPawn.owner === 'gray') {
+                                    allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].material = acceptableField;
+                                }
+                            }
+                        }
+                        // allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].material = acceptableField;
                     }
                 }
 
@@ -117,7 +134,16 @@ export default class Raycaster {
                         !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree &&
                         allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].isFree
                     ) {
-                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].material = acceptableField;
+                        for (let i = 0; i < uniquePawnList.length; i++) {
+                            if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                                let killedPawn = uniquePawnList[i];
+                                if (killedPawn && killedPawn.owner === 'pink') {
+                                    allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].material = acceptableField;
+                                }
+                            }
+                        }
+
+                        // allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].material = acceptableField;
                     }
                     if (
                         allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] &&
@@ -125,7 +151,15 @@ export default class Raycaster {
                         !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree &&
                         allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].isFree
                     ) {
-                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].material = acceptableField;
+                        for (let i = 0; i < uniquePawnList.length; i++) {
+                            if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
+                                let killedPawn = uniquePawnList[i];
+                                if (killedPawn && killedPawn.owner === 'pink') {
+                                    allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].material = acceptableField;
+                                }
+                            }
+                        }
+                        // allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].material = acceptableField;
                     }
                 }
 
