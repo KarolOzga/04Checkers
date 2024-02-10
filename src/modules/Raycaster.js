@@ -315,6 +315,10 @@ export default class Raycaster {
                 let killedPawn = uniquePawnList[i];
                 console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
                 return killedPawn.owner;
+            } else if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
+                let killedPawn = uniquePawnList[i];
+                console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
+                return killedPawn.owner;
             }
         }
     }
@@ -322,6 +326,10 @@ export default class Raycaster {
     findPinkPawnToBeKilled(intersectedObject) {
         for (let i = 0; i < uniquePawnList.length; i++) {
             if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                let killedPawn = uniquePawnList[i];
+                console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
+                return killedPawn.owner;
+            } else if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
                 let killedPawn = uniquePawnList[i];
                 console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
                 return killedPawn.owner;
