@@ -194,13 +194,9 @@ export default class Raycaster {
             if (this.selectedPawn.owner === 'pink' && allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree) {
                     if (dx === 2 && dz === 2) {
-                        for (let i = 0; i < uniquePawnList.length; i++) {
-                            if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
-                                this.killedPawn = uniquePawnList[i];
-                            }
-                        }
-
-                        if (this.killedPawn.owner === 'gray') {
+                        if (this.findGrayPawnToBeKilled(intersectedObject) === 'gray') {
+                            // chuj wie czemu ale nie dziala
+                            console.log('ANIMACJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                             this.animateMove(intersectedObject);
                         }
                     }
@@ -209,25 +205,36 @@ export default class Raycaster {
             if (this.selectedPawn.owner === 'pink' && allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree) {
                     if (dx === 2 && dz === 2) {
-                        console.log(uniquePawnList, 'BICIE');
-                        this.animateMove(intersectedObject);
+                        if (this.findGrayPawnToBeKilled(intersectedObject) === 'gray') {
+                            console.log('ANIMACJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+                            this.animateMove(intersectedObject);
+                        }
                     }
                 }
             }
 
             if (this.selectedPawn.owner === 'gray' && allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree) {
+                    console.log('dziala?');
+                    console.log(dx, dz, 'dx', 'dz');
                     if (dx === 2 && dz === 2) {
-                        console.log(uniquePawnList, 'BICIE');
-                        this.animateMove(intersectedObject);
+                        console.log(this.findPinkPawnToBeKilled(intersectedObject), 'EEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!!!');
+                        if (this.findPinkPawnToBeKilled(intersectedObject) === 'pink') {
+                            console.log('ANIMACJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+                            this.animateMove(intersectedObject);
+                        }
                     }
                 }
             }
             if (this.selectedPawn.owner === 'gray' && allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree) {
+                    console.log('dziala?');
+
                     if (dx === 2 && dz === 2) {
-                        console.log(uniquePawnList, 'BICIE');
-                        this.animateMove(intersectedObject);
+                        if (this.findPinkPawnToBeKilled(intersectedObject) === 'pink') {
+                            console.log('ANIMACJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+                            this.animateMove(intersectedObject);
+                        }
                     }
                 }
             }
@@ -299,6 +306,26 @@ export default class Raycaster {
                     })
                 )
                 .start();
+        }
+    }
+
+    findGrayPawnToBeKilled(intersectedObject) {
+        for (let i = 0; i < uniquePawnList.length; i++) {
+            if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                let killedPawn = uniquePawnList[i];
+                console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
+                return killedPawn.owner;
+            }
+        }
+    }
+
+    findPinkPawnToBeKilled(intersectedObject) {
+        for (let i = 0; i < uniquePawnList.length; i++) {
+            if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                let killedPawn = uniquePawnList[i];
+                console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
+                return killedPawn.owner;
+            }
         }
     }
 }
