@@ -90,76 +90,90 @@ export default class Raycaster {
                 }
 
                 if (intersectedObject.owner === 'pink') {
-                    console.log(!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree);
+                    let x = intersectedObject.position.x + 2;
+                    let z = intersectedObject.position.z + 2;
+                    if (x < allNetFunctions.fields2D.length && z < allNetFunctions.fields2D[0].length && allNetFunctions.fields2D[x][z] != undefined) {
+                        if (
+                            allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] &&
+                            allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2] &&
+                            !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree &&
+                            allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].isFree
+                        ) {
+                            for (let i = 0; i < uniquePawnList.length; i++) {
+                                if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
+                                    let killedPawn = uniquePawnList[i];
 
-                    if (
-                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] &&
-                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2] &&
-                        !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree &&
-                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].isFree
-                    ) {
-                        for (let i = 0; i < uniquePawnList.length; i++) {
-                            if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
-                                let killedPawn = uniquePawnList[i];
-                                console.log(killedPawn.owner, 'killedPawn OWNER [DEBUGGGGGGG]');
-                                if (killedPawn && killedPawn.owner === 'gray') {
-                                    allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].material = acceptableField;
+                                    if (killedPawn && killedPawn.owner === 'gray') {
+                                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z + 2].material = acceptableField;
+                                    }
                                 }
                             }
                         }
                     }
-                    if (
-                        allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] &&
-                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2] &&
-                        !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree &&
-                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].isFree
-                    ) {
-                        for (let i = 0; i < uniquePawnList.length; i++) {
-                            if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
-                                let killedPawn = uniquePawnList[i];
-                                console.log(killedPawn.owner, 'killedPawn OWNER [DEBUGGGGGGG]');
-                                if (killedPawn && killedPawn.owner === 'gray') {
-                                    allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].material = acceptableField;
+
+                    let x2 = intersectedObject.position.x + 2;
+                    let z2 = intersectedObject.position.z - 2;
+                    if (x2 < allNetFunctions.fields2D.length && z2 >= 0 && allNetFunctions.fields2D[x2][z2] != undefined) {
+                        if (
+                            allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] &&
+                            allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2] &&
+                            !allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree &&
+                            allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].isFree
+                        ) {
+                            for (let i = 0; i < uniquePawnList.length; i++) {
+                                if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                                    let killedPawn = uniquePawnList[i];
+
+                                    if (killedPawn && killedPawn.owner === 'gray') {
+                                        allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].material = acceptableField;
+                                    }
                                 }
                             }
+                            // allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].material = acceptableField;
                         }
-                        // allNetFunctions.fields2D[intersectedObject.position.x + 2][intersectedObject.position.z - 2].material = acceptableField;
                     }
                 }
 
                 if (intersectedObject.owner === 'gray') {
-                    if (
-                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] &&
-                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2] &&
-                        !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree &&
-                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].isFree
-                    ) {
-                        for (let i = 0; i < uniquePawnList.length; i++) {
-                            if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
-                                let killedPawn = uniquePawnList[i];
-                                if (killedPawn && killedPawn.owner === 'pink') {
-                                    allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].material = acceptableField;
+                    let x = intersectedObject.position.x - 2;
+                    let z = intersectedObject.position.z - 2;
+                    if (x >= 0 && z >= 0 && allNetFunctions.fields2D[x][z] != undefined) {
+                        if (
+                            allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] &&
+                            allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2] &&
+                            !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree &&
+                            allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].isFree
+                        ) {
+                            for (let i = 0; i < uniquePawnList.length; i++) {
+                                if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                                    let killedPawn = uniquePawnList[i];
+                                    if (killedPawn && killedPawn.owner === 'pink') {
+                                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].material = acceptableField;
+                                    }
                                 }
                             }
                         }
-
-                        // allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z - 2].material = acceptableField;
                     }
-                    if (
-                        allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] &&
-                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2] &&
-                        !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree &&
-                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].isFree
-                    ) {
-                        for (let i = 0; i < uniquePawnList.length; i++) {
-                            if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
-                                let killedPawn = uniquePawnList[i];
-                                if (killedPawn && killedPawn.owner === 'pink') {
-                                    allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].material = acceptableField;
+
+                    let x2 = intersectedObject.position.x - 2;
+                    let z2 = intersectedObject.position.z + 2;
+                    if (x2 >= 0 && z2 < allNetFunctions.fields2D[0].length && allNetFunctions.fields2D[x2][z2] != undefined) {
+                        if (
+                            allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] &&
+                            allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2] &&
+                            !allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree &&
+                            allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].isFree
+                        ) {
+                            for (let i = 0; i < uniquePawnList.length; i++) {
+                                if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
+                                    let killedPawn = uniquePawnList[i];
+                                    if (killedPawn && killedPawn.owner === 'pink') {
+                                        allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].material = acceptableField;
+                                    }
                                 }
                             }
+                            // allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].material = acceptableField;
                         }
-                        // allNetFunctions.fields2D[intersectedObject.position.x - 2][intersectedObject.position.z + 2].material = acceptableField;
                     }
                 }
 
@@ -187,9 +201,9 @@ export default class Raycaster {
 
         allNetFunctions.fields2D[Math.ceil(parseInt(this.selectedPawn.position.x))][Math.ceil(parseInt(this.selectedPawn.position.z))].isFree = true;
 
-        console.log(withoutABSX, withoutABSZ, 'withoutABSX', 'withoutABSZ');
-
         if (withoutABSX > 0 && withoutABSX <= 1 && dx === 1 && dz === 1) {
+            console.log('MOVE BY ONE STEP');
+
             new TWEEN.Tween(this.selectedPawn.position)
                 .to(
                     {
@@ -215,8 +229,6 @@ export default class Raycaster {
 
                         this.clearGreenFields();
 
-                        console.log(newPosition, 'newPosition');
-
                         client.emit('pawnMoved', { pawnId, newPosition });
 
                         allNetFunctions.setPlayerMove(pawnId);
@@ -224,71 +236,63 @@ export default class Raycaster {
                     })
                 )
                 .start();
-        } else if (intersectedObject.isFree && intersectedObject.isBlack && intersectedObject.isField) {
+        } else if (intersectedObject.isFree && intersectedObject.isBlack && intersectedObject.isField && dx === 2 && dz === 2) {
             if (this.selectedPawn.owner === 'pink' && allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree) {
                     if (dx === 2 && dz === 2) {
                         if (this.findGrayPawnToBeKilled(intersectedObject) === 'gray') {
-                            // chuj wie czemu ale nie dziala
-                            console.log('ANIMACJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                             this.animateMove(intersectedObject);
                         }
+                    } else {
+                        console.log(dx, dz, 'nie mozna tak ruszyc');
                     }
+                } else {
+                    console.log('no pawn to kill');
                 }
             }
             if (this.selectedPawn.owner === 'pink' && allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree) {
                     if (dx === 2 && dz === 2) {
                         if (this.findGrayPawnToBeKilled(intersectedObject) === 'gray') {
-                            console.log('ANIMACJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                             this.animateMove(intersectedObject);
                         }
+                    } else {
+                        console.log(dx, dz, 'nie mozna tak ruszyc');
                     }
+                } else {
+                    console.log('no pawn to kill');
                 }
             }
 
             if (this.selectedPawn.owner === 'gray' && allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree) {
-                    console.log('dziala?');
-                    console.log(dx, dz, 'dx', 'dz');
                     if (dx === 2 && dz === 2) {
-                        console.log(this.findPinkPawnToBeKilled(intersectedObject), 'EEEEEEEEEEEEEEEEEE!!!!!!!!!!!!!!!!!!');
                         if (this.findPinkPawnToBeKilled(intersectedObject) === 'pink') {
-                            console.log('ANIMACJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                             this.animateMove(intersectedObject);
                         }
+                    } else {
+                        console.log(dx, dz, 'nie mozna tak ruszyc');
                     }
+                } else {
+                    console.log('no pawn to kill');
                 }
             }
             if (this.selectedPawn.owner === 'gray' && allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] != undefined) {
                 if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree) {
-                    console.log('dziala?');
-
                     if (dx === 2 && dz === 2) {
                         if (this.findPinkPawnToBeKilled(intersectedObject) === 'pink') {
-                            console.log('ANIMACJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
                             this.animateMove(intersectedObject);
                         }
+                    } else {
+                        console.log(dx, dz, 'nie mozna tak ruszyc');
                     }
+                } else {
+                    console.log('no pawn to kill');
                 }
             }
         } else {
-            console.log('Nie można wykonać ruchu');
-            console.log(intersectedObject.isFree);
-            console.log(intersectedObject.isBlack);
-            console.log(intersectedObject.isField);
-            if (this.selectedPawn.owner === 'pink') {
-                console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1]);
-                console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1]);
-                console.log(!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree);
-                console.log(!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree);
-            }
-            if (this.selectedPawn.owner === 'gray') {
-                console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1]);
-                console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1]);
-                console.log(!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree);
-                console.log(!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree);
-            }
+            console.log('cos sie ostro spierdolilo');
+            console.log('PEWNIE JEBANE DX DZ - ', dx, dz);
         }
     }
 
@@ -304,7 +308,6 @@ export default class Raycaster {
     }
     animateMove(intersectedObject) {
         this.clearGreenFields();
-        console.log('BICIE');
 
         if (this.selectedPawn && this.selectedPawn.originalMaterial) {
             new TWEEN.Tween(this.selectedPawn.position)
@@ -347,11 +350,11 @@ export default class Raycaster {
         for (let i = 0; i < uniquePawnList.length; i++) {
             if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
                 let killedPawn = uniquePawnList[i];
-                console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
+
                 return killedPawn.owner;
             } else if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
                 let killedPawn = uniquePawnList[i];
-                console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
+
                 return killedPawn.owner;
             }
         }
@@ -361,11 +364,11 @@ export default class Raycaster {
         for (let i = 0; i < uniquePawnList.length; i++) {
             if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
                 let killedPawn = uniquePawnList[i];
-                console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
+
                 return killedPawn.owner;
             } else if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
                 let killedPawn = uniquePawnList[i];
-                console.log(killedPawn, 'killedPawn [DEBUGGGGGGG]');
+
                 return killedPawn.owner;
             }
         }

@@ -110,10 +110,10 @@ const allEvents = {
             countdown.innerText = timeLeft;
             if (timeLeft <= 0) {
                 clearInterval(timerId);
+                // this.removeOverlay();
                 if (overlay) {
                     overlay.parentNode.removeChild(overlay);
                 }
-
                 client.emit('timeUp');
             }
         }, 1000);
