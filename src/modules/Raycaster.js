@@ -427,11 +427,21 @@ export default class Raycaster {
 
     findPinkPawnToBeKilled(intersectedObject) {
         for (let i = 0; i < uniquePawnList.length; i++) {
-            if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+            if (
+                uniquePawnList[i].position.x === intersectedObject.position.x + 1 &&
+                uniquePawnList[i].position.z === intersectedObject.position.z - 1 &&
+                uniquePawnList[i].position.z - 1 === this.selectedPawn.position.z &&
+                uniquePawnList[i].position.x + 1 === this.selectedPawn.position.x
+            ) {
                 let killedPawn = uniquePawnList[i];
 
                 return killedPawn.owner;
-            } else if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
+            } else if (
+                uniquePawnList[i].position.x === intersectedObject.position.x + 1 &&
+                uniquePawnList[i].position.z === intersectedObject.position.z + 1 &&
+                uniquePawnList[i].position.z + 1 === this.selectedPawn.position.z &&
+                uniquePawnList[i].position.x + 1 === this.selectedPawn.position.x
+            ) {
                 let killedPawn = uniquePawnList[i];
 
                 return killedPawn.owner;
