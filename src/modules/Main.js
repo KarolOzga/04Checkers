@@ -217,6 +217,7 @@ client.on('pawnMoved', (data) => {
 client.on('pawnKilled', (data) => {
     const killedPawn = scene.children.find((child) => child.isPawn && child.pawnId === data.pawnId);
     if (killedPawn) {
+        allNetFunctions.fields2D[killedPawn.position.x][killedPawn.position.z].isFree = true;
         const upTween = new TWEEN.Tween(killedPawn.position).to({ y: 1.5 }, 300).easing(TWEEN.Easing.Quadratic.Out);
 
         const flipTween = new TWEEN.Tween(killedPawn.rotation).to({ x: Math.PI }, 300);

@@ -246,7 +246,7 @@ export default class Raycaster {
                             for (let i = 0; i < uniquePawnList.length; i++) {
                                 if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
                                     // uniquePawnList[i].position.y = -3;
-                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId });
+                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId, position: uniquePawnList[i].position });
                                     this.killPawn(uniquePawnList[i]);
                                 }
                             }
@@ -268,7 +268,7 @@ export default class Raycaster {
                                 if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
                                     // uniquePawnList[i].position.y = -3;
 
-                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId });
+                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId, position: uniquePawnList[i].position });
                                     this.killPawn(uniquePawnList[i]);
                                 }
                             }
@@ -290,7 +290,7 @@ export default class Raycaster {
                             for (let i = 0; i < uniquePawnList.length; i++) {
                                 if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
                                     // uniquePawnList[i].position.y = -3;
-                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId });
+                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId, position: uniquePawnList[i].position });
                                     this.killPawn(uniquePawnList[i]);
                                 }
                             }
@@ -312,7 +312,7 @@ export default class Raycaster {
                                 if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
                                     // uniquePawnList[i].position.y = -3;
 
-                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId });
+                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId, position: uniquePawnList[i].position });
                                     this.killPawn(uniquePawnList[i]);
                                 }
                             }
@@ -408,6 +408,7 @@ export default class Raycaster {
     killPawn(pawn) {
         const killedPawn = this.scene.children.find((child) => child.isPawn && child.pawnId === pawn.pawnId);
         if (killedPawn) {
+            allNetFunctions.fields2D[killedPawn.position.x][killedPawn.position.z].isFree = true;
             const upTween = new TWEEN.Tween(killedPawn.position).to({ y: 1.5 }, 300).easing(TWEEN.Easing.Quadratic.Out);
 
             const flipTween = new TWEEN.Tween(killedPawn.rotation).to({ x: Math.PI }, 300);
