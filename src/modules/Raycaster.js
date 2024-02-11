@@ -242,6 +242,14 @@ export default class Raycaster {
                     if (dx === 2 && dz === 2) {
                         if (this.findGrayPawnToBeKilled(intersectedObject) === 'gray') {
                             this.animateMove(intersectedObject);
+                            allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree = true;
+                            for (let i = 0; i < uniquePawnList.length; i++) {
+                                if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                                    // uniquePawnList[i].position.y = -3;
+                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId });
+                                    this.killPawn(uniquePawnList[i]);
+                                }
+                            }
                         }
                     } else {
                         console.log(dx, dz, 'nie mozna tak ruszyc');
@@ -255,6 +263,15 @@ export default class Raycaster {
                     if (dx === 2 && dz === 2) {
                         if (this.findGrayPawnToBeKilled(intersectedObject) === 'gray') {
                             this.animateMove(intersectedObject);
+                            allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree = true;
+                            for (let i = 0; i < uniquePawnList.length; i++) {
+                                if (uniquePawnList[i].position.x === intersectedObject.position.x - 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
+                                    // uniquePawnList[i].position.y = -3;
+
+                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId });
+                                    this.killPawn(uniquePawnList[i]);
+                                }
+                            }
                         }
                     } else {
                         console.log(dx, dz, 'nie mozna tak ruszyc');
@@ -269,6 +286,14 @@ export default class Raycaster {
                     if (dx === 2 && dz === 2) {
                         if (this.findPinkPawnToBeKilled(intersectedObject) === 'pink') {
                             this.animateMove(intersectedObject);
+                            allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree = true;
+                            for (let i = 0; i < uniquePawnList.length; i++) {
+                                if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z - 1) {
+                                    // uniquePawnList[i].position.y = -3;
+                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId });
+                                    this.killPawn(uniquePawnList[i]);
+                                }
+                            }
                         }
                     } else {
                         console.log(dx, dz, 'nie mozna tak ruszyc');
@@ -282,6 +307,15 @@ export default class Raycaster {
                     if (dx === 2 && dz === 2) {
                         if (this.findPinkPawnToBeKilled(intersectedObject) === 'pink') {
                             this.animateMove(intersectedObject);
+                            allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree = true;
+                            for (let i = 0; i < uniquePawnList.length; i++) {
+                                if (uniquePawnList[i].position.x === intersectedObject.position.x + 1 && uniquePawnList[i].position.z === intersectedObject.position.z + 1) {
+                                    // uniquePawnList[i].position.y = -3;
+
+                                    client.emit('pawnKilled', { pawnId: uniquePawnList[i].pawnId });
+                                    this.killPawn(uniquePawnList[i]);
+                                }
+                            }
                         }
                     } else {
                         console.log(dx, dz, 'nie mozna tak ruszyc');
@@ -290,9 +324,6 @@ export default class Raycaster {
                     console.log('no pawn to kill');
                 }
             }
-        } else {
-            console.log('cos sie ostro spierdolilo');
-            console.log('PEWNIE JEBANE DX DZ - ', dx, dz);
         }
     }
 
@@ -371,6 +402,28 @@ export default class Raycaster {
 
                 return killedPawn.owner;
             }
+        }
+    }
+
+    killPawn(pawn) {
+        const killedPawn = this.scene.children.find((child) => child.isPawn && child.pawnId === pawn.pawnId);
+        if (killedPawn) {
+            const upTween = new TWEEN.Tween(killedPawn.position).to({ y: 1.5 }, 300).easing(TWEEN.Easing.Quadratic.Out);
+
+            const flipTween = new TWEEN.Tween(killedPawn.rotation).to({ x: Math.PI }, 300);
+
+            const downTween = new TWEEN.Tween(killedPawn.position).to({ y: 0 }, 300);
+
+            setTimeout(() => {
+                upTween.start();
+            }, 500);
+
+            upTween.onComplete(() => {
+                flipTween.start();
+                downTween.start();
+            });
+
+            downTween.onComplete(() => this.scene.remove(killedPawn));
         }
     }
 }

@@ -61,6 +61,11 @@ socketio.on('connection', (client) => {
         // client.emit('timeUp', data);
     });
 
+    client.on('pawnKilled', (data) => {
+        client.broadcast.emit('pawnKilled', data);
+    });
+    client.emit('pawnKilled', { clientId: client.id });
+
     client.on('secondUserConnected', (data) => {
         if (client2) {
             socketio.to(client2).emit('secondUserConnected', data);

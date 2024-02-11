@@ -214,6 +214,27 @@ client.on('pawnMoved', (data) => {
         .start();
 });
 
+client.on('pawnKilled', (data) => {
+    const killedPawn = scene.children.find((child) => child.isPawn && child.pawnId === data.pawnId);
+    if (killedPawn) {
+        const upTween = new TWEEN.Tween(killedPawn.position).to({ y: 1.5 }, 300).easing(TWEEN.Easing.Quadratic.Out);
+
+        const flipTween = new TWEEN.Tween(killedPawn.rotation).to({ x: Math.PI }, 300);
+
+        const downTween = new TWEEN.Tween(killedPawn.position).to({ y: 0 }, 300);
+
+        setTimeout(() => {
+            upTween.start();
+        }, 1000);
+
+        upTween.onComplete(() => {
+            flipTween.start();
+            downTween.start();
+        });
+
+        downTween.onComplete(() => scene.remove(killedPawn));
+    }
+});
 export { setCorrectUserPawnColor };
 export { GeneratePawns };
 export { GameObject };
