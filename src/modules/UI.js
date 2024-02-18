@@ -76,8 +76,16 @@ const allEvents = {
         return user === 1 ? 'pink' : 'gray';
     },
     waitForSecondPlayerMove(user) {
+        let overlayExists = document.getElementById('overlay');
+
+        if (overlayExists) {
+            console.log('overlay already exists');
+            return;
+        }
+
         // let inWhichPlayerPlane = user === 'pink' ? 'gray' : 'pink';
         let overlay = document.createElement('div');
+
         overlay.id = 'overlay';
         overlay.style.position = 'fixed';
         overlay.style.top = '0';
