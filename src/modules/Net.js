@@ -149,7 +149,7 @@ const allNetFunctions = {
                 userInfo.innerHTML = 'Pomyślnie zresetowano graczy !!!';
                 setTimeout(() => {
                     userInfo.innerHTML = '';
-                }, 2000);
+                }, 1000);
 
                 allEvents.isUserLogged = false;
                 camera.setCameraPosition(3.65, 5, 12);
