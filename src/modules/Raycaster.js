@@ -246,11 +246,16 @@ export default class Raycaster {
             ) {
                 console.log(intersectedObject.position, 'POSITION OF INTERSECTED OBJECT');
                 // debugger;
-
+                console.log('WARUNEK PINK, X-1 Z-1');
                 if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree) {
                     console.log('CZY SKURCZYBYM JEST WOLNY 1');
 
-                    if (this.findGrayPawnToBeKilled(intersectedObject) === 'gray') {
+                    console.log(this.findGrayPawnToBeKilled(intersectedObject) === 'gray', '!!!!!!!!IMPORTANT!!!!!!!!');
+                    console.log(this.findGrayPawnToBeKilled(intersectedObject), '!!!!!!!!IMPORTANT!!!!!!!!');
+                    console.log(this.selectedPawn, 'SELECTED PAWN');
+                    let uuid = this.selectedPawn.material.uuid;
+
+                    if (this.findGrayPawnToBeKilled(intersectedObject) != uuid) {
                         this.animateMove(intersectedObject);
                         allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1].isFree = true;
                         console.log('DEBUG PINK 1');
@@ -276,9 +281,17 @@ export default class Raycaster {
                 isPawnNotKilled
             ) {
                 console.log(intersectedObject.position, 'POSITION OF INTERSECTED OBJECT');
+                console.log('WARUNEK PINK, X-1 Z+1');
                 if (!allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1].isFree) {
                     console.log('CZY SKURCZYBYM JEST WOLNY 2');
-                    if (this.findGrayPawnToBeKilled(intersectedObject) === 'gray') {
+
+                    console.log(this.findGrayPawnToBeKilled(intersectedObject) === 'gray', '!!!!!!!!IMPORTANT!!!!!!!!');
+                    console.log(this.findGrayPawnToBeKilled(intersectedObject), '!!!!!!!!IMPORTANT!!!!!!!!');
+
+                    console.log(this.selectedPawn, 'SELECTED PAWN');
+                    let uuid = this.selectedPawn.material.uuid;
+
+                    if (this.findGrayPawnToBeKilled(intersectedObject) != uuid) {
                         this.animateMove(intersectedObject);
 
                         console.log('DEBUG PINK 2');
@@ -305,9 +318,16 @@ export default class Raycaster {
                 allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] != undefined &&
                 isPawnNotKilled
             ) {
+                console.log('WARUNEK GRAY, X+1 Z-1');
                 if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1].isFree) {
                     console.log(allNetFunctions.fields2D);
-                    if (this.findPinkPawnToBeKilled(intersectedObject) === 'pink') {
+                    console.log(this.findPinkPawnToBeKilled(intersectedObject) === 'pink', '!!!!!!!!IMPORTANT!!!!!!!!');
+                    console.log(this.findPinkPawnToBeKilled(intersectedObject), '!!!!!!!!IMPORTANT!!!!!!!!');
+
+                    console.log(this.selectedPawn, 'SELECTED PAWN');
+                    let uuid = this.selectedPawn.material.uuid;
+
+                    if (this.findPinkPawnToBeKilled(intersectedObject) != uuid) {
                         this.animateMove(intersectedObject);
 
                         console.log('DEBUG GRAY 1');
@@ -333,8 +353,16 @@ export default class Raycaster {
                 allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1] != undefined &&
                 isPawnNotKilled
             ) {
+                console.log('WARUNEK GRAY, X+1 Z+1');
+
                 if (!allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1].isFree) {
-                    if (this.findPinkPawnToBeKilled(intersectedObject) === 'pink') {
+                    console.log(this.findPinkPawnToBeKilled(intersectedObject) === 'pink', '!!!!!!!!IMPORTANT!!!!!!!!');
+                    console.log(this.findPinkPawnToBeKilled(intersectedObject), '!!!!!!!!IMPORTANT!!!!!!!!');
+
+                    console.log(this.selectedPawn, 'SELECTED PAWN');
+                    let uuid = this.selectedPawn.material.uuid;
+
+                    if (this.findPinkPawnToBeKilled(intersectedObject) != uuid) {
                         console.log('DE BUGGGGGG GRAY2');
 
                         this.animateMove(intersectedObject);
@@ -417,8 +445,9 @@ export default class Raycaster {
                 uniquePawnList[i].position.x - 1 === this.selectedPawn.position.x
             ) {
                 let killedPawn = uniquePawnList[i];
-
-                return killedPawn.owner;
+                console.log(killedPawn, 'KILLED PAWN');
+                console.log('texture', killedPawn.material.map.source.uuid, 'texture');
+                return killedPawn.material.map.source.uuid;
             } else if (
                 uniquePawnList[i].position.x === intersectedObject.position.x - 1 &&
                 uniquePawnList[i].position.z === intersectedObject.position.z + 1 &&
@@ -426,8 +455,9 @@ export default class Raycaster {
                 uniquePawnList[i].position.x - 1 === this.selectedPawn.position.x
             ) {
                 let killedPawn = uniquePawnList[i];
-
-                return killedPawn.owner;
+                console.log(killedPawn, 'KILLED PAWN');
+                console.log('texture', killedPawn.material.map.source.uuid, 'texture');
+                return killedPawn.material.map.source.uuid;
             }
         }
     }
@@ -441,8 +471,9 @@ export default class Raycaster {
                 uniquePawnList[i].position.x + 1 === this.selectedPawn.position.x
             ) {
                 let killedPawn = uniquePawnList[i];
-
-                return killedPawn.owner;
+                console.log(killedPawn, 'KILLED PAWN');
+                console.log('texture', killedPawn.material.map.source.uuid, 'texture');
+                return killedPawn.material.map.source.uuid;
             } else if (
                 uniquePawnList[i].position.x === intersectedObject.position.x + 1 &&
                 uniquePawnList[i].position.z === intersectedObject.position.z + 1 &&
@@ -450,8 +481,9 @@ export default class Raycaster {
                 uniquePawnList[i].position.x + 1 === this.selectedPawn.position.x
             ) {
                 let killedPawn = uniquePawnList[i];
-
-                return killedPawn.owner;
+                console.log(killedPawn, 'KILLED PAWN');
+                console.log('texture', killedPawn.material.map.source.uuid, 'texture');
+                return killedPawn.material.map.source.uuid;
             }
         }
     }
