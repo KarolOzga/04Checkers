@@ -1,5 +1,6 @@
 import { allNetFunctions } from './Net';
 import { client } from './Main';
+import { scene } from './Main';
 let userName = '';
 
 const allEvents = {
@@ -119,16 +120,16 @@ const allEvents = {
             if (timeLeft <= 0) {
                 clearInterval(timerId);
                 // this.removeOverlay();
-                if (overlay) {
+                if (overlay && overlay.parentNode) {
                     overlay.parentNode.removeChild(overlay);
+                    client.emit('timeUp');
                 }
-                client.emit('timeUp');
             }
         }, 1000);
     },
     removeOverlay() {
         let overlay = document.getElementById('overlay');
-        if (overlay) {
+        if (overlay && overlay.parentNode) {
             overlay.parentNode.removeChild(overlay);
         }
     },

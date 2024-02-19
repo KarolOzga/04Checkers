@@ -266,6 +266,8 @@ export default class Raycaster {
                     }
                 } else {
                     console.log('no pawn to kill');
+                    console.log(this.scene.children);
+                    console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z - 1]);
                 }
             }
             if (
@@ -294,9 +296,10 @@ export default class Raycaster {
                     }
                 } else {
                     console.log('no pawn to kill');
+                    console.log(this.scene.children);
+                    console.log(allNetFunctions.fields2D[intersectedObject.position.x - 1][intersectedObject.position.z + 1]);
                 }
             }
-
             if (
                 this.selectedPawn.owner === 'gray' &&
                 allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1] != undefined &&
@@ -321,6 +324,8 @@ export default class Raycaster {
                     }
                 } else {
                     console.log('no pawn to kill');
+                    console.log(this.scene.children);
+                    console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z - 1]);
                 }
             }
             if (
@@ -346,6 +351,8 @@ export default class Raycaster {
                     }
                 } else {
                     console.log('no pawn to kill');
+                    console.log(this.scene.children);
+                    console.log(allNetFunctions.fields2D[intersectedObject.position.x + 1][intersectedObject.position.z + 1]);
                 }
             }
         }
@@ -451,6 +458,7 @@ export default class Raycaster {
 
     killPawn(pawn) {
         const killedPawn = this.scene.children.find((child) => child.isPawn && child.pawnId === pawn.pawnId);
+
         if (killedPawn) {
             allNetFunctions.fields2D[killedPawn.position.x][killedPawn.position.z].isFree = true;
             const upTween = new TWEEN.Tween(killedPawn.position).to({ y: 1.5 }, 300).easing(TWEEN.Easing.Quadratic.Out);
@@ -468,7 +476,11 @@ export default class Raycaster {
                 downTween.start();
             });
 
-            downTween.onComplete(() => this.scene.remove(killedPawn));
+            downTween.onComplete(() => {
+                this.scene.remove(killedPawn);
+                uniquePawnList.splice(uniquePawnList.indexOf(killedPawn), 1);
+                console.log(uniquePawnList, 'UNIQUE PAWN LIST');
+            });
         }
     }
 }
